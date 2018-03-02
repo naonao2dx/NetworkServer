@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 
     #define CMD_START__  (0x0001)
     #define CMD_STOP__  (0x0002)
+    #define CMD_CONSOLE__ (0x0004)
 
     //#define SERVER_APPLICATION_NAME "WebServer"
     std::string strExec(argv[0]);
@@ -50,6 +51,8 @@ int main(int argc, char** argv) {
             argFlag = CMD_START__;
         } else if (0 == strncmp(*argv, "stop", 4)) {
             argFlag = CMD_STOP__;
+        } else if (0 == strncmp(*argv, "console", 7)) {
+            argFlag = CMD_CONSOLE__;
         }
     }
 
@@ -67,6 +70,7 @@ int main(int argc, char** argv) {
 
             // PIDファイルの作成
             PIDFile::makePIDFile(strExec, getpid());
+
             for(;;)
                 pause();
             break;
@@ -81,6 +85,19 @@ int main(int argc, char** argv) {
             } else {
                 std::cout << "Failed to stop process: " << PIDFile::getExistPID(strExec) << std::endl;
             }
+            break;
+        }
+        case CMD_CONSOLE__: {
+            // pidファイルで多重起動チェック
+            if (PIDFile::isExistPIDFile(strExec)) {
+                std::cout << strExec << " process is already exist !" << std::endl;
+                std::cout << "Check your pid file !" << std::endl;
+                std::cout << "Running process id is " << PIDFile::getExistPID(strExec);
+                exit(1);
+            }
+            std::cout << "test" << std::endl;
+            for(;;)
+                pause();
             break;
         }
     }
