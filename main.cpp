@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include "common/PIDFile.h"
 #include "common/system/Signal.h"
+#include "server/ServerManager.h"
 
 #define MAXFD 64
 
@@ -71,9 +72,6 @@ int main(int argc, char** argv) {
 
             // PIDファイルの作成
             PIDFile::makePIDFile(strExec, getpid());
-
-            for(;;)
-                pause();
             break;
         }
         case CMD_STOP__: {
@@ -86,7 +84,7 @@ int main(int argc, char** argv) {
             } else {
                 std::cerr << "Failed to stop process: " << PIDFile::getExistPID(strExec) << std::endl;
             }
-            break;
+            return (0);
         }
         case CMD_CONSOLE__: {
             // pidファイルで多重起動チェック
@@ -96,10 +94,10 @@ int main(int argc, char** argv) {
                 std::cerr << "Running process id is " << PIDFile::getExistPID(strExec);
                 exit(1);
             }
-            for(;;)
-                pause();
             break;
         }
     }
+    ServerManager *svManager = ServerManager::getInstance();
+    svManager->constructServer();
     return 0;
 }
