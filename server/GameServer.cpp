@@ -5,6 +5,7 @@
 #include "GameServer.h"
 #include "../common/system/TCP.h"
 #include "../common/system/Signal.h"
+#include "../common/system/LockFcntl.h"
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -24,12 +25,17 @@ GameServer* GameServer::getInstance() {
     return s_pInstance;
 }
 
+GameServer::GameServer() {
+    m_pLockFcntl = LockFcntl::getInstance();
+}
+
 void GameServer::start() {
     int listenfd, i;
     socklen_t addrlen;
 
     listenfd = TCP::listen(nullptr, m_listenPort.c_str(), &addrlen);
     m_pids = new pid_t[nchildren];
+    m_pLockFcntl->init(std::string("./lock.server"));
 
     for (i = 0; i < nchildren; i++)
         m_pids[i] = makeChild(i, listenfd, addrlen);
@@ -58,7 +64,15 @@ void GameServer::process(int i, int listenfd, int addrlen) {
     cliaddr = new struct sockaddr;
 
     for ( ; ; ) {
-        //clilen = addrlen;
+        clilen = addrlen;
+
+        m_pLockFcntl->wait();
+        connfd = accept(listenfd, cliaddr, &clilen);
+        m_pLockFcntl->release();
+        write(connfd, "\"HTTP/1.1 200 OK\\r\\n\\\r\\n\"", strlen("\"HTTP/1.1 200 OK\\r\\n\\\r\\n\""));
+        std::cout << "process: " << getpid() << std::endl;
+
+        close(connfd);
 
     }
 }

@@ -7,17 +7,20 @@
 
 #include <sys/socket.h>
 #include <string>
+#include "../common/system/LockFcntl.h"
 
 
 class GameServer {
 public:
+    LockFcntl *m_pLockFcntl;
+
     static GameServer* getInstance();
     void start();
 
 private:
     static GameServer *s_pInstance;
 
-    GameServer(){};
+    GameServer();
     virtual ~GameServer(){}
 
     std::string m_listenPort = "8080";
