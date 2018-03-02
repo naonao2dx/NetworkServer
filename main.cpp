@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "common/PIDFile.h"
+#include "common/system/Signal.h"
 
 #define MAXFD 64
 
@@ -15,7 +16,7 @@ void daemonInitialize() {
     // セッションリーダー化
     setsid();
     // HUPシグナルを無視
-    signal(SIGHUP, SIG_IGN);
+    Signal::Handle(SIGHUP, SIG_IGN);
     // 親プロセスを切り離し
     if ( (pid = fork()) != 0)
         exit(0);
@@ -31,10 +32,10 @@ void daemonInitialize() {
 
 int main(int argc, char** argv) {
     if (1 == argc) {
-        std::cout << "execute [options]" << std::endl;
-        std::cout << "[options]" << std::endl;
-        std::cout << "    start: start by background." << std::endl;
-        std::cout << "     stop: stop server application" << std::endl;
+        std::cerr << "execute [options]" << std::endl;
+        std::cerr << "[options]" << std::endl;
+        std::cerr << "    start: start by background." << std::endl;
+        std::cerr << "     stop: stop server application" << std::endl;
     }
 
     #define CMD_START__  (0x0001)
@@ -60,9 +61,9 @@ int main(int argc, char** argv) {
         case CMD_START__: {
             // pidファイルで多重起動チェック
             if (PIDFile::isExistPIDFile(strExec)) {
-                std::cout << strExec << " process is already exist !" << std::endl;
-                std::cout << "Check your pid file !" << std::endl;
-                std::cout << "Running process id is " << PIDFile::getExistPID(strExec);
+                std::cerr << strExec << " process is already exist !" << std::endl;
+                std::cerr << "Check your pid file !" << std::endl;
+                std::cerr << "Running process id is " << PIDFile::getExistPID(strExec);
                 exit(1);
             }
             // デーモンプロセス化
@@ -83,19 +84,18 @@ int main(int argc, char** argv) {
                 // PIDファイルの削除
                 PIDFile::removePIDFile(strExec);
             } else {
-                std::cout << "Failed to stop process: " << PIDFile::getExistPID(strExec) << std::endl;
+                std::cerr << "Failed to stop process: " << PIDFile::getExistPID(strExec) << std::endl;
             }
             break;
         }
         case CMD_CONSOLE__: {
             // pidファイルで多重起動チェック
             if (PIDFile::isExistPIDFile(strExec)) {
-                std::cout << strExec << " process is already exist !" << std::endl;
-                std::cout << "Check your pid file !" << std::endl;
-                std::cout << "Running process id is " << PIDFile::getExistPID(strExec);
+                std::cerr << strExec << " process is already exist !" << std::endl;
+                std::cerr << "Check your pid file !" << std::endl;
+                std::cerr << "Running process id is " << PIDFile::getExistPID(strExec);
                 exit(1);
             }
-            std::cout << "test" << std::endl;
             for(;;)
                 pause();
             break;
