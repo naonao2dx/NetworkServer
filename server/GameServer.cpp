@@ -21,22 +21,15 @@ m_childProcessNum(childProcessNum)
     m_pLockFcntl = LockFcntl::getInstance();
 }
 
-GameServer::GameServer(const GameServer &rhs):
-        m_listenPort(rhs.m_listenPort),
-        m_childProcessNum(rhs.m_childProcessNum),
-        m_pids(rhs.m_pids),
-        m_pLockFcntl(rhs.m_pLockFcntl)
-{
-}
-
 void GameServer::start() {
     int listenfd, i;
     socklen_t addrlen;
     std::string strListenPort = std::to_string(m_listenPort);
 
     listenfd = TCP::listen(nullptr, strListenPort.c_str(), &addrlen);
-    m_pids = new pid_t[m_childProcessNum];
-    m_pLockFcntl->init(std::string("./lock.server"));
+    m_pids.reset(new pid_t[m_childProcessNum]);
+
+    m_pLockFcntl->init(std::string("./GameServer.lock"));
 
     for (i = 0; i < m_childProcessNum; i++)
         m_pids[i] = makeChild(i, listenfd, addrlen);
@@ -50,7 +43,7 @@ void GameServer::start() {
 pid_t GameServer::makeChild(int i, int listenfd, int addrlen) {
     pid_t pid;
     if ( (pid = fork()) > 0) {
-        std::cout << "return pid: " << pid << std::endl;
+        std::cout << "fork process: " << pid << std::endl;
         return pid;
     }
     process(i, listenfd, addrlen);
@@ -68,7 +61,7 @@ void GameServer::process(int i, int listenfd, int addrlen) {
 
         m_pLockFcntl->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
-        std::cout << "process: " << getpid() << std::endl;
+        std::cout << "accept process: " << getpid() << std::endl;
         m_pLockFcntl->release();
         Http::process(connfd);
 

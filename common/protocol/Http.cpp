@@ -27,10 +27,6 @@ void Http::process(int sockfd) {
         response(sockfd, "\r\n\r\n");
         response(sockfd, "\r\n");
     }
-
-
-
-    std::cout << "http" << std::endl;
 }
 
 
