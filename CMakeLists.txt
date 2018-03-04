@@ -3,4 +3,4 @@ project(WebServer)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(WebServer main.cpp common/system/PIDFile.h common/system/Signal.h common/system/Signal.cpp common/system/Signal.h server/ServerManager.cpp server/ServerManager.h server/GameServer.cpp server/GameServer.h common/protocol/TCP.cpp common/protocol/TCP.h common/system/LockFcntl.cpp common/system/LockFcntl.h common/protocol/Http.cpp common/protocol/Http.h server/AbstractServer.cpp server/AbstractServer.h common/system/Daemon.cpp common/system/Daemon.h common/code/Singleton.h)
+add_executable(WebServer src/main.cpp src/common/system/PIDFile.h src/common/system/Signal.h src/common/system/Signal.cpp src/common/system/Signal.h src/server/ServerManager.cpp src/server/ServerManager.h src/server/GameServer.cpp src/server/GameServer.h src/common/protocol/TCP.cpp src/common/protocol/TCP.h src/common/system/LockFcntl.cpp src/common/system/LockFcntl.h src/common/protocol/Http.cpp src/common/protocol/Http.h src/server/AbstractServer.cpp src/server/AbstractServer.h src/common/system/Daemon.cpp src/common/system/Daemon.h src/common/code/Singleton.h)
