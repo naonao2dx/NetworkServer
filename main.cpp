@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
             break;
         }
     }
-    ServerManager *svManager = ServerManager::getInstance();
-    svManager->constructServer();
+    std::shared_ptr<ServerManager> serverManager = ServerManager::getInstance();
+    serverManager->constructServer();
     return 0;
 }

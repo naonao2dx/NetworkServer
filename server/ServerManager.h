@@ -8,10 +8,13 @@
 
 #include <vector>
 #include "AbstractServer.h"
+#include "../common/code/Singleton.h"
 
-class ServerManager {
+class ServerManager : public Singleton<ServerManager> {
+private:
+    friend class Singleton<ServerManager>;
+    ServerManager() {};
 public:
-    static ServerManager* getInstance();
     static void sigInt(int signo);
 
     void constructServer();
@@ -20,9 +23,6 @@ public:
     std::vector<std::shared_ptr<AbstractServer>> m_serverArray;
 
 protected:
-    static ServerManager *s_pInstance;
-    ServerManager() {};
-    virtual ~ServerManager(){};
 
 };
 

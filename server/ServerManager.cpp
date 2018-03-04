@@ -7,19 +7,6 @@
 #include "ServerManager.h"
 #include "GameServer.h"
 
-ServerManager *ServerManager::s_pInstance = nullptr;
-
-ServerManager* ServerManager::getInstance() {
-    if (nullptr == s_pInstance) {
-        try {
-            s_pInstance = new ServerManager();
-        } catch (std::bad_alloc& r) {
-            std::cerr << r.what() << std::endl;
-        }
-    }
-    return s_pInstance;
-}
-
 void ServerManager::constructServer() {
     std::cout << "Construct Server" << std::endl;
     std::shared_ptr<AbstractServer> gmServer = std::make_shared<GameServer>(8080, 10);
@@ -36,7 +23,7 @@ void ServerManager::destructServer() {
 }
 
 void ServerManager::sigInt(int signo) {
-    ServerManager *serverManager = ServerManager::getInstance();
+    std::shared_ptr<ServerManager> serverManager = ServerManager::getInstance();
     serverManager->destructServer();
 }
 
