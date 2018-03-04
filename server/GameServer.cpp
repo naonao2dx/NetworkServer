@@ -49,11 +49,12 @@ void GameServer::start() {
 pid_t GameServer::makeChild(int i, int listenfd, int addrlen) {
     pid_t pid;
     if ( (pid = fork()) > 0) {
-        std::cout << "fork pid: " << pid << std::endl;
+        //std::cout << "fork pid: " << pid << std::endl;
         return pid;
     }
-
-    process(i, listenfd, addrlen);
+    TCP *tcp = new TCP();
+    tcp->wait(i, listenfd, addrlen);
+    //process(i, listenfd, addrlen);
     return pid;
 }
 
@@ -68,9 +69,10 @@ void GameServer::process(int i, int listenfd, int addrlen) {
 
         m_pLockFcntl->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
-        m_pLockFcntl->release();
-        write(connfd, "\"HTTP/1.1 200 OK\\r\\n\\\r\\n\"", strlen("\"HTTP/1.1 200 OK\\r\\n\\\r\\n\""));
         std::cout << "process: " << getpid() << std::endl;
+        m_pLockFcntl->release();
+        write(connfd, "HTTP/1.1 200 OK\r\n\r\n", strlen("HTTP/1.1 200 OK\r\n\r\n"));
+        //std::cout << "process: " << getpid() << std::endl;
 
         close(connfd);
 
