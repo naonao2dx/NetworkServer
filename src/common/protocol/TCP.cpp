@@ -10,10 +10,6 @@
 #include "../system/LockFcntl.h"
 #include "Http.h"
 
-TCP::TCP() {
-    m_pLockFcntl = LockFcntl::getInstance();
-}
-
 int TCP::listen(const char *host, const char *serv, socklen_t *addrlenp) {
     int listenfd, n;
     struct addrinfo hints, *res, *ressave;

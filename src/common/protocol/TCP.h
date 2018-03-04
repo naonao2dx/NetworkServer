@@ -12,8 +12,6 @@
 
 class TCP {
 public:
-    LockFcntl *m_pLockFcntl;
-    TCP();
     static int listen(const char *host, const char *serv, socklen_t *addrlenp);
 };
 
