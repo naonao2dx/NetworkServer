@@ -7,41 +7,41 @@
 #include "../common/system/Signal.h"
 #include "../common/system/LockFcntl.h"
 #include "../common/protocol/Http.h"
+#include "ServerManager.h"
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
 #include <errno.h>
 #include <iostream>
 
-GameServer *GameServer::s_pInstance = nullptr;
-
-GameServer* GameServer::getInstance() {
-    if (nullptr == s_pInstance) {
-        try {
-            s_pInstance = new GameServer();
-        } catch (std::bad_alloc& r) {
-            std::cerr << r.what() << std::endl;
-        }
-    }
-    return s_pInstance;
+GameServer::GameServer(int listenPort, int childProcessNum):
+m_listenPort(listenPort),
+m_childProcessNum(childProcessNum)
+{
+    m_pLockFcntl = LockFcntl::getInstance();
 }
 
-GameServer::GameServer() {
-    m_pLockFcntl = LockFcntl::getInstance();
+GameServer::GameServer(const GameServer &rhs):
+        m_listenPort(rhs.m_listenPort),
+        m_childProcessNum(rhs.m_childProcessNum),
+        m_pids(rhs.m_pids),
+        m_pLockFcntl(rhs.m_pLockFcntl)
+{
 }
 
 void GameServer::start() {
     int listenfd, i;
     socklen_t addrlen;
+    std::string strListenPort = std::to_string(m_listenPort);
 
-    listenfd = TCP::listen(nullptr, m_listenPort.c_str(), &addrlen);
-    m_pids = new pid_t[nchildren];
+    listenfd = TCP::listen(nullptr, strListenPort.c_str(), &addrlen);
+    m_pids = new pid_t[m_childProcessNum];
     m_pLockFcntl->init(std::string("./lock.server"));
 
-    for (i = 0; i < nchildren; i++)
+    for (i = 0; i < m_childProcessNum; i++)
         m_pids[i] = makeChild(i, listenfd, addrlen);
-
-    Signal::Handle(SIGTERM, GameServer::sigInt);
+    Signal::Handle(SIGTERM, ServerManager::sigInt);
+    Signal::Handle(SIGINT, ServerManager::sigInt);
 
     for ( ; ; )
         pause();
@@ -50,10 +50,9 @@ void GameServer::start() {
 pid_t GameServer::makeChild(int i, int listenfd, int addrlen) {
     pid_t pid;
     if ( (pid = fork()) > 0) {
-        //std::cout << "fork pid: " << pid << std::endl;
+        std::cout << "return pid: " << pid << std::endl;
         return pid;
     }
-    TCP *tcp = new TCP();
     process(i, listenfd, addrlen);
     return pid;
 }
@@ -78,16 +77,11 @@ void GameServer::process(int i, int listenfd, int addrlen) {
     }
 }
 
-void GameServer::sigInt(int signo) {
-    GameServer* gmServer = GameServer::getInstance();
-    gmServer->killChild();
-}
-
 void GameServer::killChild() {
     int i;
-    for (i = 0; i < nchildren; i++) {
+    for (i = 0; i < m_childProcessNum; i++) {
         kill(m_pids[i], SIGTERM);
-        std::cout << "kill pid: " << m_pids[i] << std::endl;
+        std::cout << "kill process: " << m_pids[i] << std::endl;
     }
 
     while (wait(NULL) > 0)

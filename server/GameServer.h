@@ -8,29 +8,27 @@
 #include <sys/socket.h>
 #include <string>
 #include "../common/system/LockFcntl.h"
+#include "AbstractServer.h"
 
 
-class GameServer {
+class GameServer : public AbstractServer {
 public:
+    GameServer(int listenPort, int childProcessNum);
+    GameServer(const GameServer &rhs);
+    virtual ~GameServer(){};
+
     LockFcntl *m_pLockFcntl;
 
-    static GameServer* getInstance();
     void start();
+    void killChild();
 
 private:
-    static GameServer *s_pInstance;
-
-    GameServer();
-    virtual ~GameServer(){}
-
-    std::string m_listenPort = "8080";
-    int nchildren = 10;
+    int m_listenPort;
+    int m_childProcessNum;
     pid_t *m_pids;
 
-    static void sigInt(int signo);
     pid_t makeChild(int i, int listenfd, int addrlen);
     void process(int i, int listenfd, int addrlen);
-    void killChild();
 
 };
 

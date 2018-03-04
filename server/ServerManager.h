@@ -6,11 +6,18 @@
 #define WEBSERVER_SERVERMANAGER_H
 
 
+#include <vector>
+#include "AbstractServer.h"
+
 class ServerManager {
 public:
     static ServerManager* getInstance();
+    static void sigInt(int signo);
+
     void constructServer();
-    void destructServer(){};
+    void destructServer();
+
+    std::vector<std::shared_ptr<AbstractServer>> m_serverArray;
 
 protected:
     static ServerManager *s_pInstance;
