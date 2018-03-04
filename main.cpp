@@ -3,33 +3,7 @@
 #include "common/PIDFile.h"
 #include "common/system/Signal.h"
 #include "server/ServerManager.h"
-
-#define MAXFD 64
-
-void daemonInitialize() {
-    int i = 0;
-    pid_t pid = 0;
-
-    std::cout << getpid() << std::endl;
-    // 親プロセスを終了
-    if ( (pid = fork()) != 0 )
-        exit(0);
-    // セッションリーダー化
-    setsid();
-    // HUPシグナルを無視
-    Signal::Handle(SIGHUP, SIG_IGN);
-    // 親プロセスを切り離し
-    if ( (pid = fork()) != 0)
-        exit(0);
-
-    // ファイルモード作成マスクのクリア
-    umask(0);
-    // 全てのファイルディスクリプタをクローズ
-    for (i = 0; i < MAXFD; i++) {
-        close(i);
-    }
-
-}
+#include "common/system/Daemon.h"
 
 int main(int argc, char** argv) {
     if (1 == argc) {
@@ -68,7 +42,7 @@ int main(int argc, char** argv) {
                 exit(1);
             }
             // デーモンプロセス化
-            daemonInitialize();
+            Daemon::init();
 
             // PIDファイルの作成
             PIDFile::makePIDFile(strExec, getpid());
@@ -76,8 +50,8 @@ int main(int argc, char** argv) {
         }
         case CMD_STOP__: {
             // システムコマンドでプロセス終了
-            std::string strCommand = "kill -TERM " + PIDFile::getExistPID(strExec);
-            int ret = system(strCommand.c_str());
+            pid_t pid = PIDFile::getExistPID(strExec);
+            int ret = kill(pid, SIGTERM);
             if (ret == 0) {
                 // PIDファイルの削除
                 PIDFile::removePIDFile(strExec);

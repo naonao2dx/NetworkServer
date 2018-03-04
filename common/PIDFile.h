@@ -26,16 +26,18 @@ public:
         return (isExist(filePath));
     }
 
-    inline static std::string getExistPID(std::string strProcessName) {
+    inline static pid_t getExistPID(std::string strProcessName) {
+        int pid;
         std::ifstream fin(strProcessName + ".pid");
         if (!fin) {
             // エラー処理
         }
         std::stringstream strstream;
         strstream << fin.rdbuf();
+        strstream >> pid;
         fin.close();
 
-        return strstream.str();
+        return pid;
     }
 
     inline static void makePIDFile(std::string strExec, pid_t pid) {
@@ -63,10 +65,6 @@ private:
         }
         return true;
     }
-
-
-
-
 };
 
 #endif //WEBSERVER_PIDFILE_H

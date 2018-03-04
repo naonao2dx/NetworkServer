@@ -6,7 +6,6 @@
 #include <iostream>
 #include "ServerManager.h"
 #include "GameServer.h"
-#include "../common/system/Signal.h"
 
 ServerManager *ServerManager::s_pInstance = nullptr;
 
