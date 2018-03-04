@@ -7,33 +7,11 @@
 #include <iostream>
 #include <unistd.h>
 #include "TCP.h"
-#include "LockFcntl.h"
-#include "../protocol/Http.h"
+#include "../system/LockFcntl.h"
+#include "Http.h"
 
 TCP::TCP() {
     m_pLockFcntl = LockFcntl::getInstance();
-}
-
-void TCP::wait(int i, int listenfd, int addrlen) {
-    int connfd;
-    socklen_t clilen;
-    struct sockaddr *cliaddr;
-    cliaddr = (sockaddr*)malloc(addrlen);
-
-    for ( ; ; ) {
-
-        clilen = addrlen;
-
-        m_pLockFcntl->wait();
-        connfd = accept(listenfd, cliaddr, &clilen);
-        std::cout << "process: " << getpid() << std::endl;
-        m_pLockFcntl->release();
-        Http::process(connfd);
-
-
-        close(connfd);
-
-    }
 }
 
 int TCP::listen(const char *host, const char *serv, socklen_t *addrlenp) {

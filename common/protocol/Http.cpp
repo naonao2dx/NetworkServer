@@ -21,6 +21,10 @@ void Http::process(int sockfd) {
         std::cout << uri << std::endl;
         response(sockfd, "HTTP/1.1 200 OK\r\n");
         response(sockfd, "Server: bamboo\r\n");
+        char pid[10];
+        sprintf(pid, "%d", getpid());
+        response(sockfd, pid);
+        response(sockfd, "\r\n\r\n");
         response(sockfd, "\r\n");
     }
 

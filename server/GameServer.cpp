@@ -3,9 +3,10 @@
 //
 
 #include "GameServer.h"
-#include "../common/system/TCP.h"
+#include "../common/protocol/TCP.h"
 #include "../common/system/Signal.h"
 #include "../common/system/LockFcntl.h"
+#include "../common/protocol/Http.h"
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -53,8 +54,7 @@ pid_t GameServer::makeChild(int i, int listenfd, int addrlen) {
         return pid;
     }
     TCP *tcp = new TCP();
-    tcp->wait(i, listenfd, addrlen);
-    //process(i, listenfd, addrlen);
+    process(i, listenfd, addrlen);
     return pid;
 }
 
@@ -71,8 +71,7 @@ void GameServer::process(int i, int listenfd, int addrlen) {
         connfd = accept(listenfd, cliaddr, &clilen);
         std::cout << "process: " << getpid() << std::endl;
         m_pLockFcntl->release();
-        write(connfd, "HTTP/1.1 200 OK\r\n\r\n", strlen("HTTP/1.1 200 OK\r\n\r\n"));
-        //std::cout << "process: " << getpid() << std::endl;
+        Http::process(connfd);
 
         close(connfd);
 

@@ -32,7 +32,7 @@ void LockFcntl::init(std::string filepath) {
     lockIt.l_start = 0;
     lockIt.l_len = 0;
 
-    unlockIt.l_type = F_WRLCK;
+    unlockIt.l_type = F_UNLCK;
     unlockIt.l_whence = SEEK_SET;
     unlockIt.l_start = 0;
     unlockIt.l_len = 0;
