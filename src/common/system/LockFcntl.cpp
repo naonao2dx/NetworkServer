@@ -7,20 +7,8 @@
 #include <unistd.h>
 #include "LockFcntl.h"
 
-LockFcntl* LockFcntl::s_pInstance = nullptr;
-
-LockFcntl* LockFcntl::getInstance() {
-    if (nullptr == s_pInstance) {
-        try {
-            s_pInstance = new LockFcntl();
-        } catch (std::bad_alloc& r) {
-            std::cerr << r.what() << std::endl;
-        }
-    }
-    return s_pInstance;
-}
-
-void LockFcntl::init(std::string filepath) {
+void LockFcntl::init() {
+    std::string filepath("./GameServer.logk");
     char* lockfile = new char[filepath.size() + 1];
     std::strcpy(lockfile, filepath.c_str());
     mktemp(lockfile);

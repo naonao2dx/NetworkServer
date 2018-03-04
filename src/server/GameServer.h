@@ -16,7 +16,7 @@ public:
     GameServer(int listenPort, int childProcessNum);
     virtual ~GameServer(){};
 
-    LockFcntl *m_pLockFcntl;
+    std::shared_ptr<Lock> m_pLock;
 
     void start();
     void killChild();

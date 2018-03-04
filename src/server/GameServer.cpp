@@ -5,12 +5,9 @@
 #include "GameServer.h"
 #include "../common/protocol/TCP.h"
 #include "../common/system/Signal.h"
-#include "../common/system/LockFcntl.h"
 #include "../common/protocol/Http.h"
 #include "ServerManager.h"
 #include <unistd.h>
-#include <signal.h>
-#include <sys/wait.h>
 #include <errno.h>
 #include <iostream>
 
@@ -18,7 +15,11 @@ GameServer::GameServer(int listenPort, int childProcessNum):
 m_listenPort(listenPort),
 m_childProcessNum(childProcessNum)
 {
-    m_pLockFcntl = LockFcntl::getInstance();
+#ifdef __APPLE__
+    m_pLock = LockFcntl::getInstance();
+#else
+    m_pLock = LockPthread::getInstance();
+#endif
 }
 
 void GameServer::start() {
@@ -29,7 +30,7 @@ void GameServer::start() {
     listenfd = TCP::listen(nullptr, strListenPort.c_str(), &addrlen);
     m_pids.reset(new pid_t[m_childProcessNum]);
 
-    m_pLockFcntl->init(std::string("./GameServer.lock"));
+    m_pLock->init();
 
     for (i = 0; i < m_childProcessNum; i++)
         m_pids[i] = makeChild(i, listenfd, addrlen);
@@ -59,10 +60,10 @@ void GameServer::process(int i, int listenfd, int addrlen) {
     for ( ; ; ) {
         clilen = addrlen;
 
-        m_pLockFcntl->wait();
+        m_pLock->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
         std::cout << "accept process: " << getpid() << std::endl;
-        m_pLockFcntl->release();
+        m_pLock->release();
         Http::process(connfd);
 
         close(connfd);

@@ -5,26 +5,22 @@
 #ifndef WEBSERVER_LOCKFCNTL_H
 #define WEBSERVER_LOCKFCNTL_H
 
-
 #include <string>
 #include <fcntl.h>
+#include "Lock.h"
+#include "../code/Singleton.h"
 
-class LockFcntl {
+class LockFcntl : public Singleton<LockFcntl>, public Lock {
+private:
+    friend class Singleton<LockFcntl>;
+    LockFcntl(){};
 public:
-    static LockFcntl* getInstance();
-
     struct flock lockIt, unlockIt;
     int lockfd = -1;
 
-    void init(std::string filepath);
+    void init();
     void wait();
     void release();
-
-private:
-    static LockFcntl* s_pInstance;
-    LockFcntl(){};
-    virtual ~LockFcntl(){};
 };
-
 
 #endif //WEBSERVER_LOCKFCNTL_H

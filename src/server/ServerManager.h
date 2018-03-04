@@ -13,7 +13,7 @@
 class ServerManager : public Singleton<ServerManager> {
 private:
     friend class Singleton<ServerManager>;
-    ServerManager() {};
+    ServerManager(){};
 public:
     static void sigInt(int signo);
 
