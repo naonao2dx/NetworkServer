@@ -28,12 +28,11 @@ void GameServer::start() {
     std::string strListenPort = std::to_string(m_listenPort);
 
     listenfd = TCP::listen(nullptr, strListenPort.c_str(), &addrlen);
-    m_pids.reset(new pid_t[m_childProcessNum]);
 
     m_pLock->init();
 
     for (i = 0; i < m_childProcessNum; i++)
-        m_pids[i] = makeChild(i, listenfd, addrlen);
+        m_pids.push_back(makeChild(i, listenfd, addrlen));
     Signal::Handle(SIGTERM, ServerManager::sigInt);
     Signal::Handle(SIGINT, ServerManager::sigInt);
 
@@ -74,8 +73,8 @@ void GameServer::process(int i, int listenfd, int addrlen) {
 void GameServer::killChild() {
     int i;
     for (i = 0; i < m_childProcessNum; i++) {
-        kill(m_pids[i], SIGTERM);
-        std::cout << "kill process: " << m_pids[i] << std::endl;
+        kill(m_pids.at(i), SIGTERM);
+        std::cout << "kill process: " << m_pids.at(i) << std::endl;
     }
 
     while (wait(NULL) > 0)
