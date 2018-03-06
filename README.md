@@ -2,24 +2,24 @@
 WebServer is the multifunctional server (now works as only basic HTTP server).  
 It's developed by C++.
 
-# Quick Start
-## Build
+## Quick Start
+### Build
 * Clone the repository.
 * Build by CMake.
 
-## Command
-### As foreground process
+### Command
+#### As foreground process
 * Start server: $ ./WebServer console
 * Stop server: ctrl + c
 
-### As daemon process
+#### As daemon process
 * Start server: $ ./WebServer start
 * Stop server: $ ./WebServer stop
 
-### Check
+#### Check
 * Access from  web browser to "http://localhost:8080".
 
-# Configuration
+## Configuration
 Configuration control by the conf file is under developing.  
 * "prefork" multiprocess model (10 process).
 * Listening port is 8080 (not need "root" privileges).
