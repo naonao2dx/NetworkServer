@@ -9,7 +9,7 @@
 
 void ServerManager::constructServer() {
     std::cout << "Construct Server" << std::endl;
-    std::shared_ptr<AbstractServer> gmServer = std::make_shared<GameServer>(8080, 10);
+    auto gmServer = std::make_shared<GameServer>(8080, 10);
     m_serverArray.push_back(gmServer);
     gmServer->start();
 }
@@ -23,7 +23,7 @@ void ServerManager::destructServer() {
 }
 
 void ServerManager::sigInt(int signo) {
-    std::shared_ptr<ServerManager> serverManager = ServerManager::getInstance();
+    auto serverManager = ServerManager::getInstance();
     serverManager->destructServer();
 }
 

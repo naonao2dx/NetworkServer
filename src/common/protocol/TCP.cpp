@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "TCP.h"
 #include "../system/LockFcntl.h"
-#include "Http.h"
+#include "HttpRequest.h"
 
 int TCP::listen(const char *host, const char *serv, socklen_t *addrlenp) {
     int listenfd, n;

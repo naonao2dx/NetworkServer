@@ -11,7 +11,6 @@
 #define MAXFD 64
 
 void Daemon::init() {
-    int i = 0;
     pid_t pid = 0;
 
     std::cout << getpid() << std::endl;
@@ -29,7 +28,7 @@ void Daemon::init() {
     // ファイルモード作成マスクのクリア
     umask(0);
     // 全てのファイルディスクリプタをクローズ
-    for (i = 0; i < MAXFD; i++) {
+    for (auto i = 0; i < MAXFD; i++) {
         close(i);
     }
 }

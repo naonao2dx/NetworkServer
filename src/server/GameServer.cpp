@@ -5,7 +5,7 @@
 #include "GameServer.h"
 #include "../common/protocol/TCP.h"
 #include "../common/system/Signal.h"
-#include "../common/protocol/Http.h"
+#include "../common/protocol/HttpRequest.h"
 #include "ServerManager.h"
 #include <unistd.h>
 #include <errno.h>
@@ -16,6 +16,7 @@ m_listenPort(listenPort),
 m_childProcessNum(childProcessNum)
 {
 #ifdef __APPLE__
+    // Macはプロセスをまたいだmutexロック（PTHREAD_PROCESS_SHARED）が使えない
     m_pLock = LockFcntl::getInstance();
 #else
     m_pLock = LockPthread::getInstance();
@@ -23,7 +24,7 @@ m_childProcessNum(childProcessNum)
 }
 
 void GameServer::start() {
-    int listenfd, i;
+    int listenfd;
     socklen_t addrlen;
     std::string strListenPort = std::to_string(m_listenPort);
 
@@ -31,7 +32,7 @@ void GameServer::start() {
 
     m_pLock->init();
 
-    for (i = 0; i < m_childProcessNum; i++)
+    for (auto i = 0; i < m_childProcessNum; i++)
         m_pids.push_back(makeChild(i, listenfd, addrlen));
     Signal::Handle(SIGTERM, ServerManager::sigInt);
     Signal::Handle(SIGINT, ServerManager::sigInt);
@@ -63,7 +64,7 @@ void GameServer::process(int i, int listenfd, int addrlen) {
         connfd = accept(listenfd, cliaddr, &clilen);
         std::cout << "accept process: " << getpid() << std::endl;
         m_pLock->release();
-        Http::process(connfd);
+        HttpRequest::process(connfd);
 
         close(connfd);
 
@@ -71,8 +72,7 @@ void GameServer::process(int i, int listenfd, int addrlen) {
 }
 
 void GameServer::killChild() {
-    int i;
-    for (i = 0; i < m_childProcessNum; i++) {
+    for (auto i = 0; i < m_childProcessNum; i++) {
         kill(m_pids.at(i), SIGTERM);
         std::cout << "kill process: " << m_pids.at(i) << std::endl;
     }

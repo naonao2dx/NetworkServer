@@ -13,7 +13,7 @@ public:
     virtual ~AbstractServer(){};
 
     virtual void start() = 0;
-    virtual void killChild(){};
+    virtual void killChild() = 0;
 
 };
 
