@@ -14,31 +14,23 @@ HttpResponseHead::HttpResponseHead(int sockfd)
 }
 
 int HttpResponseHead::response(char* uri) {
-    int len;
-    /*
     int readfd;
+    int httpStatusCode;
 
-    char reqfile[256];
-    char openfile[256];
-    char docroot[256];
-
-    if (m_uri[0] == '\0') {
-        strcat(reqfile, "index.html");
-    }
-
-    strcat(openfile, docroot);
-    strcat(openfile, reqfile);
-
-    if ( (readfd = open(openfile, O_RDONLY)) == -1) {
-        addResponse(m_sockfd, "HTTP/1.1 404 Not Found \r\n");
-        addResponse(m_sockfd, "Server: WebServer\r\n");
-        addResponse(m_sockfd, "\r\n");
+    std::string reqfile;
+    if (0 == strcmp(uri, "/")) {
+        reqfile = "/index.html";
     } else {
-        addResponse(m_sockfd, "HTTP/1.1 200 OK \r\n");
-        addResponse(m_sockfd, "Server: WebServer\r\n");
-        addResponse(m_sockfd, "\r\n");
+        reqfile = uri;
     }
-    close(readfd);*/
 
-    return len;
+    std::string openfile("../resource/html");
+    openfile.append(reqfile);
+
+    if ( (readfd = open(openfile.c_str(), O_RDONLY)) == -1) {
+        httpStatusCode = 404;
+    } else {
+        httpStatusCode = 200;
+    }
+    setResponseHeader(httpStatusCode);
 }
