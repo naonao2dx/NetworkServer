@@ -3,9 +3,9 @@
 //
 
 #include "GameServer.h"
-#include "../common/protocol/TCP.h"
+#include "../common/protocol/tcp/TCP.h"
 #include "../common/system/Signal.h"
-#include "../common/protocol/HttpRequest.h"
+#include "../common/protocol/http/HttpRequest.h"
 #include "ServerManager.h"
 #include <unistd.h>
 #include <errno.h>
