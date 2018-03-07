@@ -2,8 +2,8 @@
 // Created by 竹内 直 on 2018/03/02.
 //
 
-#ifndef WEBSERVER_GAMESERVER_H
-#define WEBSERVER_GAMESERVER_H
+#ifndef WEBSERVER_HTMLSERVER_H
+#define WEBSERVER_HTMLSERVER_H
 
 #include <sys/socket.h>
 #include <string>
@@ -12,10 +12,10 @@
 #include "../AbstractServer.h"
 
 
-class GameServer : public AbstractServer {
+class HTMLServer : public AbstractServer {
 public:
-    GameServer(int listenPort, int childProcessNum);
-    ~GameServer() {};
+    HTMLServer(int listenPort, int childProcessNum);
+    ~HTMLServer() {};
 
     std::shared_ptr<Lock> m_pLock;
 
@@ -33,4 +33,4 @@ private:
 };
 
 
-#endif //WEBSERVER_GAMESERVER_H
+#endif //WEBSERVER_HTMLSERVER_H

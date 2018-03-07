@@ -2,7 +2,7 @@
 // Created by 竹内 直 on 2018/03/02.
 //
 
-#include "GameServer.h"
+#include "HTMLServer.h"
 #include "../../common/protocol/tcp/TCP.h"
 #include "../../common/system/Signal.h"
 #include "../../common/protocol/http/HttpRequest.h"
@@ -12,13 +12,11 @@
 #include "../../common/protocol/http/HttpResponsePost.h"
 #include "../../common/code/StrUtil.h"
 #include <unistd.h>
-#include <cerrno>
 #include <iostream>
-#include <fstream>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-GameServer::GameServer(int listenPort, int childProcessNum):
+HTMLServer::HTMLServer(int listenPort, int childProcessNum):
 m_listenPort(listenPort),
 m_childProcessNum(childProcessNum)
 {
@@ -30,7 +28,7 @@ m_childProcessNum(childProcessNum)
 #endif
 }
 
-void GameServer::start() {
+void HTMLServer::start() {
     int listenfd;
     socklen_t addrlen;
     std::string strListenPort = std::to_string(m_listenPort);
@@ -48,7 +46,7 @@ void GameServer::start() {
         pause();
 }
 
-pid_t GameServer::makeChild(int i, int listenfd, int addrlen) {
+pid_t HTMLServer::makeChild(int i, int listenfd, int addrlen) {
     pid_t pid;
     if ( (pid = fork()) > 0) {
         std::cout << "fork process: " << pid << std::endl;
@@ -58,13 +56,13 @@ pid_t GameServer::makeChild(int i, int listenfd, int addrlen) {
     return pid;
 }
 
-void GameServer::process(int i, int listenfd, int addrlen) {
+void HTMLServer::process(int i, int listenfd, int addrlen) {
     int connfd;
     socklen_t clilen;
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
     std::unique_ptr<HttpResponseBase> httpResponse;
-    std::ofstream accesslog("../resource/log/GameServer/access.log", std::ios::out | std::ios::app);
+    std::ofstream accesslog("../resource/HTMLServer/log/access.log", std::ios::out | std::ios::app);
 
     for ( ; ; ) {
         clilen = addrlen;
@@ -115,7 +113,7 @@ void GameServer::process(int i, int listenfd, int addrlen) {
     }
 }
 
-void GameServer::killChild() {
+void HTMLServer::killChild() {
     for (auto i = 0; i < m_childProcessNum; i++) {
         kill(m_pids.at(i), SIGTERM);
         std::cout << "kill process: " << m_pids.at(i) << std::endl;
