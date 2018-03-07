@@ -10,7 +10,7 @@
 class HttpResponsePost : public HttpResponseBase {
 public:
     HttpResponsePost(int sockfd);
-    size_t response(char* uri, std::ofstream& accesslog) override;
+    size_t response(char* uri, std::vector<std::string> &logStrArray) override;
 };
 
 

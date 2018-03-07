@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
+#include <vector>
 #include "HttpResponseHead.h"
 
 HttpResponseHead::HttpResponseHead(int sockfd)
@@ -13,7 +14,7 @@ HttpResponseHead::HttpResponseHead(int sockfd)
 
 }
 
-size_t HttpResponseHead::response(char* uri, std::ofstream& accesslog) {
+size_t HttpResponseHead::response(char* uri, std::vector<std::string> &logStrArray) {
     int readfd;
     int httpStatusCode;
 
@@ -33,4 +34,5 @@ size_t HttpResponseHead::response(char* uri, std::ofstream& accesslog) {
         httpStatusCode = 200;
     }
     setResponseHeader(httpStatusCode);
+    logStrArray.push_back(std::to_string(httpStatusCode));
 }

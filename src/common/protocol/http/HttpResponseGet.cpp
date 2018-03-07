@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
+#include <vector>
 #include "HttpResponseGet.h"
 
 HttpResponseGet::HttpResponseGet(int sockfd)
@@ -12,7 +13,7 @@ HttpResponseGet::HttpResponseGet(int sockfd)
 
 }
 
-size_t HttpResponseGet::response(char* uri, std::ofstream& accesslog) {
+size_t HttpResponseGet::response(char* uri, std::vector<std::string> &logStrArray) {
     size_t len = 0;
     int readfd;
     char buf[1024];
@@ -45,6 +46,8 @@ size_t HttpResponseGet::response(char* uri, std::ofstream& accesslog) {
         }
         close(readfd);
     }
+
+    logStrArray.push_back(std::to_string(httpStatusCode));
 
     return len;
 }

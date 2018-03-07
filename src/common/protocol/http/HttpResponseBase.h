@@ -13,7 +13,7 @@ class HttpResponseBase {
 public:
     HttpResponseBase(int sockfd);
     HttpResponseBase() = default;
-    virtual size_t response(char* uri, std::ofstream& accesslog);
+    virtual size_t response(char* uri, std::vector<std::string> &logStrArray);
 
 protected:
     int m_sockfd;

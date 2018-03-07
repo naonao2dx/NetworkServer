@@ -8,6 +8,7 @@
 
 #include <string>
 #include <fstream>
+#include <vector>
 
 enum HttpMethod {
     HEAD,
@@ -18,7 +19,7 @@ enum HttpMethod {
 
 class HttpRequest {
 public:
-    static HttpMethod process(int sockfd, char* uri, std::ofstream& accesslog);
+    static HttpMethod process(int sockfd, char* uri, std::vector<std::string> &logStrArray);
 
 
 };

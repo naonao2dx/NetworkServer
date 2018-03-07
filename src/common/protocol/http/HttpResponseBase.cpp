@@ -30,8 +30,9 @@ void HttpResponseBase::setResponseHeader(int httpStatusCode) {
     addResponse(m_sockfd, headerStr.c_str());
 }
 
-size_t HttpResponseBase::response(char* uri, std::ofstream& accesslog) {
+size_t HttpResponseBase::response(char* uri, std::vector<std::string> &logStrArray) {
     setResponseHeader(405);
+    logStrArray.push_back("405");
 }
 
 size_t HttpResponseBase::addResponse(int fd, const char *message) {

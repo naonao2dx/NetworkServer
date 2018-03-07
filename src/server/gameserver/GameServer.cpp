@@ -10,6 +10,7 @@
 #include "../../common/protocol/http/HttpResponseHead.h"
 #include "../../common/protocol/http/HttpResponseGet.h"
 #include "../../common/protocol/http/HttpResponsePost.h"
+#include "../../common/code/StrUtil.h"
 #include <unistd.h>
 #include <cerrno>
 #include <iostream>
@@ -63,22 +64,29 @@ void GameServer::process(int i, int listenfd, int addrlen) {
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
     std::unique_ptr<HttpResponseBase> httpResponse;
-
     std::ofstream accesslog("../resource/log/GameServer/access.log", std::ios::out | std::ios::app);
 
     for ( ; ; ) {
         clilen = addrlen;
         char uri[256];
+        std::vector<std::string> logStrArray;
+
+        logStrArray.push_back(std::to_string(getpid()));
 
         m_pLock->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
-        struct sockaddr_in *test = (struct sockaddr_in *) cliaddr;
-        struct in_addr ip = test->sin_addr;
+
+        struct sockaddr_in *sock = (struct sockaddr_in *) cliaddr;
+        struct in_addr ip = sock->sin_addr;
+        logStrArray.push_back(inet_ntoa(ip));
+        logStrArray.push_back(std::to_string(sock->sin_port));
+        /*
         std::cout << inet_ntoa(ip) << ":";
-        std::cout  << test->sin_port << std::endl;
+        std::cout  << sock->sin_port << std::endl;
         std::cout << "accept process: " << getpid() << std::endl;
+         */
         m_pLock->release();
-        HttpMethod method = HttpRequest::process(connfd, uri, accesslog);
+        HttpMethod method = HttpRequest::process(connfd, uri, logStrArray);
 
         switch(method) {
             case HEAD: {
@@ -99,9 +107,9 @@ void GameServer::process(int i, int listenfd, int addrlen) {
             }
         }
 
-        httpResponse->response(uri, accesslog);
+        httpResponse->response(uri, logStrArray);
 
-        accesslog << std::endl;
+        accesslog << StrUtil::implode(logStrArray, " ") << std::endl;
         close(connfd);
 
     }
