@@ -4,11 +4,11 @@
 
 #include "StrUtil.h"
 std::string StrUtil::implode(std::vector<std::string> strArray, std::string delimiter) {
-    std::string str;
-    for(auto itr = strArray.begin(); itr != strArray.end(); ++itr) {
-        str.append(*itr);
-        str.append(delimiter);
+    std::string retStr;
+    for(const auto& str : strArray) {
+        retStr += str;
+        retStr += delimiter;
     }
-    str.pop_back();
-    return str;
+    retStr.pop_back();
+    return retStr;
 }
