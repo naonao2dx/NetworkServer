@@ -26,7 +26,7 @@ void HttpResponseBase::setResponseHeader(int httpStatusCode) {
     addResponse(m_sockfd, headerRow1Str.c_str());
 
     headerStr += "\r\n";
-    headerStr += "Server: WebServer\r\n\r\n";
+    headerStr += "Server: NetworkServer\r\n\r\n";
     addResponse(m_sockfd, headerStr.c_str());
 }
 

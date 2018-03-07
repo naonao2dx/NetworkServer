@@ -5,13 +5,13 @@
 #include <new>
 #include <iostream>
 #include "ServerManager.h"
-#include "gameserver/GameServer.h"
+#include "web/WebServer.h"
 
 void ServerManager::constructServer() {
     std::cout << "Construct Server" << std::endl;
-    auto gmServer = std::make_shared<GameServer>(8080, 10);
-    m_serverArray.push_back(gmServer);
-    gmServer->start();
+    auto webServer = std::make_shared<WebServer>(8080, 10);
+    m_serverArray.push_back(webServer);
+    webServer->start();
 }
 
 void ServerManager::destructServer() {

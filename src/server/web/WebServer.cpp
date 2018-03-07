@@ -2,7 +2,7 @@
 // Created by 竹内 直 on 2018/03/02.
 //
 
-#include "HTMLServer.h"
+#include "WebServer.h"
 #include "../../common/protocol/tcp/TCP.h"
 #include "../../common/system/Signal.h"
 #include "../../common/protocol/http/HttpRequest.h"
@@ -16,7 +16,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-HTMLServer::HTMLServer(int listenPort, int childProcessNum):
+WebServer::WebServer(int listenPort, int childProcessNum):
 m_listenPort(listenPort),
 m_childProcessNum(childProcessNum)
 {
@@ -28,7 +28,7 @@ m_childProcessNum(childProcessNum)
 #endif
 }
 
-void HTMLServer::start() {
+void WebServer::start() {
     int listenfd;
     socklen_t addrlen;
     std::string strListenPort = std::to_string(m_listenPort);
@@ -46,7 +46,7 @@ void HTMLServer::start() {
         pause();
 }
 
-pid_t HTMLServer::makeChild(int i, int listenfd, int addrlen) {
+pid_t WebServer::makeChild(int i, int listenfd, int addrlen) {
     pid_t pid;
     if ( (pid = fork()) > 0) {
         std::cout << "fork process: " << pid << std::endl;
@@ -56,13 +56,13 @@ pid_t HTMLServer::makeChild(int i, int listenfd, int addrlen) {
     return pid;
 }
 
-void HTMLServer::process(int i, int listenfd, int addrlen) {
+void WebServer::process(int i, int listenfd, int addrlen) {
     int connfd;
     socklen_t clilen;
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
     std::unique_ptr<HttpResponseBase> httpResponse;
-    std::ofstream accesslog("../resource/HTMLServer/log/access.log", std::ios::out | std::ios::app);
+    std::ofstream accesslog("../resource/webserver/log/access.log", std::ios::out | std::ios::app);
 
     for ( ; ; ) {
         clilen = addrlen;
@@ -113,7 +113,7 @@ void HTMLServer::process(int i, int listenfd, int addrlen) {
     }
 }
 
-void HTMLServer::killChild() {
+void WebServer::killChild() {
     for (auto i = 0; i < m_childProcessNum; i++) {
         kill(m_pids.at(i), SIGTERM);
         std::cout << "kill process: " << m_pids.at(i) << std::endl;

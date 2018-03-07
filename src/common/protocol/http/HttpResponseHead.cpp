@@ -25,7 +25,7 @@ size_t HttpResponseHead::response(char* uri, std::vector<std::string> &logStrArr
         reqfile = uri;
     }
 
-    std::string openfile("../resource/html");
+    std::string openfile("../resource/webserver/html");
     openfile.append(reqfile);
 
     if ( (readfd = open(openfile.c_str(), O_RDONLY)) == -1) {

@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     #define CMD_STOP__  (0x0002)
     #define CMD_CONSOLE__ (0x0004)
 
-    //#define SERVER_APPLICATION_NAME "WebServer"
+    //#define SERVER_APPLICATION_NAME "NetworkServer"
     std::string strExec(argv[0]);
 
     u_int8_t argFlag = 0;
