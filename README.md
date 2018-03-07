@@ -19,7 +19,7 @@ It's developed by C++.
 #### Check
 * Access from  web browser to "http://localhost:8080".
 
-## Features 
+## Features
 * "prefork" multiprocess model (10 process).
 * Listening port is 8080 (not need "root" privileges).
 * HEAD method returns ony header.
