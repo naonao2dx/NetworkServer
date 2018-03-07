@@ -11,7 +11,7 @@
 class HttpResponseHead : public HttpResponseBase {
 public:
     HttpResponseHead(int sockfd);
-    size_t response(char* uri) override;
+    size_t response(char* uri, std::ofstream& accesslog) override;
 };
 
 #endif //WEBSERVER_HTTPRESPONSEHEAD_H

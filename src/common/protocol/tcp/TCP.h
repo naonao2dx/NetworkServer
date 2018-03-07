@@ -12,7 +12,7 @@
 
 class TCP {
 public:
-    static int listen(const char *host, const char *serv, socklen_t *addrlenp);
+    static int Listen(const char *host, const char *serv, socklen_t *addrlenp);
 };
 
 

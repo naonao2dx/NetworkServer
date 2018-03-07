@@ -12,7 +12,7 @@ HttpResponseGet::HttpResponseGet(int sockfd)
 
 }
 
-size_t HttpResponseGet::response(char* uri) {
+size_t HttpResponseGet::response(char* uri, std::ofstream& accesslog) {
     size_t len = 0;
     int readfd;
     char buf[1024];

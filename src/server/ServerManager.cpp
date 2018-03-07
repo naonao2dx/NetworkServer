@@ -5,7 +5,7 @@
 #include <new>
 #include <iostream>
 #include "ServerManager.h"
-#include "GameServer.h"
+#include "gameserver/GameServer.h"
 
 void ServerManager::constructServer() {
     std::cout << "Construct Server" << std::endl;

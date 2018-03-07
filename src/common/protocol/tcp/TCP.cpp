@@ -5,19 +5,22 @@
 #include <netdb.h>
 #include <strings.h>
 #include <iostream>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include "TCP.h"
-#include "../../system/LockFcntl.h"
 #include "../http/HttpRequest.h"
 
-int TCP::listen(const char *host, const char *serv, socklen_t *addrlenp) {
+int TCP::Listen(const char *host, const char *serv, socklen_t *addrlenp) {
     int listenfd, n;
     struct addrinfo hints, *res, *ressave;
     const int on = 1;
 
-    bzero(&hints, sizeof(struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_flags = AI_PASSIVE;
-    hints.ai_family = AF_UNSPEC;
+    // ひとまずIPv4固定で
+    //hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
     if ( (n = getaddrinfo(host, serv, &hints, &res)) != 0)
@@ -33,12 +36,12 @@ int TCP::listen(const char *host, const char *serv, socklen_t *addrlenp) {
         if (bind(listenfd, res->ai_addr, res->ai_addrlen) == 0)
             break;
         close(listenfd);
-    } while ( (res = res->ai_next) != NULL);
+    } while ( (res = res->ai_next) != nullptr);
 
     if (nullptr == res) {
         std::cerr << "TCP Listen error for " << host << ", " << serv << std::endl;
     }
-    ::listen(listenfd, LISTENQ);
+    listen(listenfd, LISTENQ);
 
     if (addrlenp)
         *addrlenp = res->ai_addrlen;

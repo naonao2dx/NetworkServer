@@ -2,6 +2,8 @@
 // Created by 竹内 直 on 2018/03/06.
 //
 #include <unistd.h>
+#include <iostream>
+#include <sstream>
 #include <vector>
 #include "HttpResponseBase.h"
 #include "../../code/StrUtil.h"
@@ -28,7 +30,7 @@ void HttpResponseBase::setResponseHeader(int httpStatusCode) {
     addResponse(m_sockfd, headerStr.c_str());
 }
 
-size_t HttpResponseBase::response(char* uri) {
+size_t HttpResponseBase::response(char* uri, std::ofstream& accesslog) {
     setResponseHeader(405);
 }
 

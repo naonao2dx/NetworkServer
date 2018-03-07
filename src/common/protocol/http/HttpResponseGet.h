@@ -12,7 +12,7 @@
 class HttpResponseGet : public HttpResponseBase {
 public:
     HttpResponseGet(int sockfd);
-    size_t response(char* uri) override;
+    size_t response(char* uri, std::ofstream& accesslog) override;
 };
 
 

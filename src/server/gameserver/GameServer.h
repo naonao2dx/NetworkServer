@@ -8,8 +8,8 @@
 #include <sys/socket.h>
 #include <string>
 #include <vector>
-#include "../common/system/LockFcntl.h"
-#include "AbstractServer.h"
+#include "../../common/system/LockFcntl.h"
+#include "../AbstractServer.h"
 
 
 class GameServer : public AbstractServer {
