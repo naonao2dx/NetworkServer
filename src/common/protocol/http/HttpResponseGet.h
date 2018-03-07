@@ -12,7 +12,7 @@
 class HttpResponseGet : public HttpResponseBase {
 public:
     HttpResponseGet(int sockfd);
-    virtual int response(char* uri);
+    size_t response(char* uri) override;
 };
 
 

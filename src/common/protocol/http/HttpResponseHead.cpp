@@ -13,7 +13,7 @@ HttpResponseHead::HttpResponseHead(int sockfd)
 
 }
 
-int HttpResponseHead::response(char* uri) {
+size_t HttpResponseHead::response(char* uri) {
     int readfd;
     int httpStatusCode;
 

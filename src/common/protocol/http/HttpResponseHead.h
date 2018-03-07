@@ -11,7 +11,7 @@
 class HttpResponseHead : public HttpResponseBase {
 public:
     HttpResponseHead(int sockfd);
-    virtual int response(char* uri);
+    size_t response(char* uri) override;
 };
 
 #endif //WEBSERVER_HTTPRESPONSEHEAD_H

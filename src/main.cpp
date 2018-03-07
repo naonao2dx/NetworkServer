@@ -70,6 +70,14 @@ int main(int argc, char** argv) {
             }
             break;
         }
+        default: {
+            std::cerr << "execute [options]" << std::endl;
+            std::cerr << "[options]" << std::endl;
+            std::cerr << "    start: start by background." << std::endl;
+            std::cerr << "     stop: stop server application" << std::endl;
+            break;
+        }
+
     }
     auto serverManager = ServerManager::getInstance();
     serverManager->constructServer();

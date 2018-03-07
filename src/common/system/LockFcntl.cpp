@@ -8,9 +8,7 @@
 #include "LockFcntl.h"
 
 void LockFcntl::init() {
-    std::string filepath("./GameServer.logk");
-    char* lockfile = new char[filepath.size() + 1];
-    std::strcpy(lockfile, filepath.c_str());
+    char* lockfile = "./GameServer.logk";
     mktemp(lockfile);
     lockfd = open(lockfile, O_CREAT | O_WRONLY, FILESEC_MODE);
     unlink(lockfile);

@@ -10,7 +10,7 @@
 class HttpResponsePost : public HttpResponseBase {
 public:
     HttpResponsePost(int sockfd);
-    virtual int response(char* uri);
+    size_t response(char* uri) override;
 };
 
 

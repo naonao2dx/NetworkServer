@@ -7,8 +7,11 @@
 #include "../common/system/Signal.h"
 #include "../common/protocol/http/HttpRequest.h"
 #include "ServerManager.h"
+#include "../common/protocol/http/HttpResponseHead.h"
+#include "../common/protocol/http/HttpResponseGet.h"
+#include "../common/protocol/http/HttpResponsePost.h"
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <iostream>
 
 GameServer::GameServer(int listenPort, int childProcessNum):
@@ -56,15 +59,38 @@ void GameServer::process(int i, int listenfd, int addrlen) {
     socklen_t clilen;
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
+    std::unique_ptr<HttpResponseBase> httpResponse;
 
     for ( ; ; ) {
         clilen = addrlen;
+        char uri[256];
 
         m_pLock->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
         std::cout << "accept process: " << getpid() << std::endl;
         m_pLock->release();
-        HttpRequest::process(connfd);
+        HttpMethod method = HttpRequest::process(connfd, uri);
+
+        switch(method) {
+            case HEAD: {
+                httpResponse.reset(new HttpResponseHead(connfd));
+                break;
+            }
+            case GET: {
+                httpResponse.reset(new HttpResponseGet(connfd));
+                break;
+            }
+            case POST: {
+                httpResponse.reset(new HttpResponsePost(connfd));
+                break;
+            }
+            default: {
+                httpResponse.reset(new HttpResponseBase(connfd));
+                break;
+            }
+        }
+
+        httpResponse->response(uri);
 
         close(connfd);
 

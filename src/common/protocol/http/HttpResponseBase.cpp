@@ -17,24 +17,23 @@ void HttpResponseBase::setResponseHeader(int httpStatusCode) {
     std::string statusStr = httpStatusCodeMap[httpStatusCode];
 
     std::vector<std::string> headerRow1Array;
-    headerRow1Array.push_back("HTTP/1.1");
+    headerRow1Array.emplace_back("HTTP/1.1");
     headerRow1Array.push_back(std::to_string(httpStatusCode));
     headerRow1Array.push_back(statusStr);
     std::string headerRow1Str = StrUtil::implode(headerRow1Array, " ");
     addResponse(m_sockfd, headerRow1Str.c_str());
 
-    headerStr.append("\r\n");
-    headerStr.append("Server: WebServer\r\n");
-    headerStr.append("\r\n");
+    headerStr += "\r\n";
+    headerStr += "Server: WebServer\r\n\r\n";
     addResponse(m_sockfd, headerStr.c_str());
 }
 
-int HttpResponseBase::response(char* uri) {
+size_t HttpResponseBase::response(char* uri) {
     setResponseHeader(405);
 }
 
-int HttpResponseBase::addResponse(int fd, const char *message) {
-    int len;
+size_t HttpResponseBase::addResponse(int fd, const char *message) {
+    size_t len;
     len = strlen(message);
     if (write(fd, message, len) != len) {
 

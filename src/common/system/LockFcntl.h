@@ -18,9 +18,9 @@ public:
     struct flock lockIt, unlockIt;
     int lockfd = -1;
 
-    void init();
-    void wait();
-    void release();
+    void init() override;
+    void wait() override;
+    void release() override;
 };
 
 #endif //WEBSERVER_LOCKFCNTL_H

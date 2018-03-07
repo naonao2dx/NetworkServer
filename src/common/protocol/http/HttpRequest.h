@@ -7,10 +7,18 @@
 
 
 #include <string>
+enum HttpMethod {
+    HEAD,
+    GET,
+    POST,
+    OTHER,
+};
 
 class HttpRequest {
 public:
-    static void process(int sockfd);
+    static HttpMethod process(int sockfd, char* uri);
+
+
 };
 
 

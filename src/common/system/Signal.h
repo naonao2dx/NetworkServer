@@ -5,16 +5,13 @@
 #ifndef WEBSERVER_SIGNAL_H
 #define WEBSERVER_SIGNAL_H
 
-#include <signal.h>
+#include <csignal>
 
 typedef void Sigfunc(int);
 
 class Signal {
 
 public:
-    Signal();
-    virtual ~Signal();
-
     static Sigfunc * Handle(int signo, Sigfunc *func);
 
 

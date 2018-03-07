@@ -15,12 +15,12 @@
 class GameServer : public AbstractServer {
 public:
     GameServer(int listenPort, int childProcessNum);
-    virtual ~GameServer(){};
+    ~GameServer() {};
 
     std::shared_ptr<Lock> m_pLock;
 
-    void start();
-    void killChild();
+    void start() override;
+    void killChild() override;
 
 private:
     int m_listenPort; // リスニングポート

@@ -12,8 +12,8 @@ HttpResponsePost::HttpResponsePost(int sockfd)
 
 }
 
-int HttpResponsePost::response(char* uri) {
-    int len;
+size_t HttpResponsePost::response(char* uri) {
+    size_t len = 0;
     int readfd;
     char buf[1024];
 
@@ -38,7 +38,7 @@ int HttpResponsePost::response(char* uri) {
     setResponseHeader(httpStatusCode);
 
     if (httpStatusCode == 200) {
-        while ( (len = read(readfd, buf, 1024)) > 0) {
+        while ( (len = (size_t) read(readfd, buf, 1024)) > 0) {
             if (write(m_sockfd, buf, len) != len) {
                 std::cerr << "Error: Writing a response" << std::endl;
                 break;

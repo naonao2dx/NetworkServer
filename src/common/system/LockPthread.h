@@ -15,9 +15,9 @@ private:
     LockPthread(){};
 
 public:
-    void init();
-    void wait();
-    void release();
+    void init() override;
+    void wait() override;
+    void release() override;
 
     pthread_mutex_t *mptr;
 };

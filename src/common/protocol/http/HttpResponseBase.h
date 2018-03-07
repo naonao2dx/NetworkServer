@@ -13,13 +13,13 @@ class HttpResponseBase {
 public:
     HttpResponseBase(int sockfd);
     HttpResponseBase() = default;
-    virtual int response(char* uri);
+    virtual size_t response(char* uri);
 
 protected:
     int m_sockfd;
 
     void setResponseHeader(int httpStatusCode);
-    int addResponse(int fd, const char* message);
+    size_t addResponse(int fd, const char* message);
 
     std::map<int, std::string> httpStatusCodeMap {
             {200, "OK"},
