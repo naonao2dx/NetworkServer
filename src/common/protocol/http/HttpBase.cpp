@@ -14,13 +14,21 @@
 HttpBase::HttpBase(int connfd, struct sockaddr* cliaddr) :
 m_connfd(connfd)
 {
+    char ipv6addr[INET6_ADDRSTRLEN];
+
     // ipaddress
-    struct sockaddr_in *remoteaddr = (struct sockaddr_in *) cliaddr;
-    struct in_addr ipstruct = remoteaddr->sin_addr;
-    m_remoteIp = inet_ntoa(ipstruct);
+    //struct sockaddr_in *remoteaddr = (struct sockaddr_in *) cliaddr;
+    //struct in_addr ipstruct = remoteaddr->sin_addr;
+    //m_remoteIp = inet_ntoa(ipstruct);
+
+    // IPv6対応
+    struct sockaddr_in6 *remoteaddr6 = (struct sockaddr_in6 *) cliaddr;
+    struct in6_addr ipstruct6 = remoteaddr6->sin6_addr;
+    inet_ntop(AF_INET6, &remoteaddr6->sin6_addr, ipv6addr, sizeof(ipv6addr));
+    m_remoteIp = ipv6addr;
 
     // port
-    m_remotePort = remoteaddr->sin_port;
+    m_remotePort = remoteaddr6->sin6_port;
 }
 
 void HttpBase::request() {

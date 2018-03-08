@@ -16,9 +16,8 @@ int TCP::Listen(const char *host, const char *serv, socklen_t *addrlenp) {
 
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_flags = AI_PASSIVE;
-    // ひとまずIPv4固定で
-    //hints.ai_family = AF_UNSPEC;
-    hints.ai_family = AF_INET;
+    hints.ai_family = AF_UNSPEC;
+    //hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
     if ( (n = getaddrinfo(host, serv, &hints, &res)) != 0)
