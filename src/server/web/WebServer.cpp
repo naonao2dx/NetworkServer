@@ -5,16 +5,12 @@
 #include "WebServer.h"
 #include "../../common/protocol/tcp/TCP.h"
 #include "../../common/system/Signal.h"
-#include "../../common/protocol/http/HttpRequest.h"
 #include "../ServerManager.h"
-#include "../../common/protocol/http/HttpResponseHead.h"
-#include "../../common/protocol/http/HttpResponseGet.h"
-#include "../../common/protocol/http/HttpResponsePost.h"
-#include "../../common/code/StrUtil.h"
+#include "../../common/protocol/http/HttpBase.h"
 #include <unistd.h>
 #include <iostream>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+
 
 WebServer::WebServer(int listenPort, int childProcessNum):
 m_listenPort(listenPort),
@@ -61,53 +57,19 @@ void WebServer::process(int i, int listenfd, int addrlen) {
     socklen_t clilen;
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
-    std::unique_ptr<HttpResponseBase> httpResponse;
     std::ofstream accesslog("../resource/webserver/log/access.log", std::ios::out | std::ios::app);
 
     for ( ; ; ) {
         clilen = addrlen;
-        char uri[256];
-        std::vector<std::string> logStrArray;
-
-        logStrArray.push_back(std::to_string(getpid()));
 
         m_pLock->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
-
-        struct sockaddr_in *sock = (struct sockaddr_in *) cliaddr;
-        struct in_addr ip = sock->sin_addr;
-        logStrArray.push_back(inet_ntoa(ip));
-        logStrArray.push_back(std::to_string(sock->sin_port));
-        /*
-        std::cout << inet_ntoa(ip) << ":";
-        std::cout  << sock->sin_port << std::endl;
-        std::cout << "accept process: " << getpid() << std::endl;
-         */
         m_pLock->release();
-        HttpMethod method = HttpRequest::process(connfd, uri, logStrArray);
 
-        switch(method) {
-            case HEAD: {
-                httpResponse.reset(new HttpResponseHead(connfd));
-                break;
-            }
-            case GET: {
-                httpResponse.reset(new HttpResponseGet(connfd));
-                break;
-            }
-            case POST: {
-                httpResponse.reset(new HttpResponsePost(connfd));
-                break;
-            }
-            default: {
-                httpResponse.reset(new HttpResponseBase(connfd));
-                break;
-            }
-        }
+        HttpBase httpBase = HttpBase(connfd, cliaddr);
+        httpBase.process();
+        httpBase.outputAccessLog(accesslog);
 
-        httpResponse->response(uri, logStrArray);
-
-        accesslog << StrUtil::implode(logStrArray, " ") << std::endl;
         close(connfd);
 
     }

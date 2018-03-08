@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
         std::cerr << "[options]" << std::endl;
         std::cerr << "    start: start by background." << std::endl;
         std::cerr << "     stop: stop server application" << std::endl;
+        exit(0);
     }
 
     #define CMD_START__  (0x0001)

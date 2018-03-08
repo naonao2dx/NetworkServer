@@ -5,11 +5,9 @@
 #include <netdb.h>
 #include <strings.h>
 #include <iostream>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include "TCP.h"
-#include "../http/HttpRequest.h"
+
 
 int TCP::Listen(const char *host, const char *serv, socklen_t *addrlenp) {
     int listenfd, n;
