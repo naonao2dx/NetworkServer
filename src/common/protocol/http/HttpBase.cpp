@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <strstream>
 
 HttpBase::HttpBase(int connfd, struct sockaddr* cliaddr) :
 m_connfd(connfd)
@@ -40,12 +41,37 @@ void HttpBase::request() {
     char method[10];
     char uri[100];
     char httpver[10];
+    char* headerRow;
+    std::vector<char* > headerArray;
+    std::map<std::string, std::string> headerMap;
+    std::string key;
+    std::string value;
 
-    if (read(m_connfd, buf, 1024) <= 0) {
+    // TODO: Reading and analyzing about over 1024 byte header
+
+    if (read(m_connfd, buf, 1023) <= 0) {
         exit(1);
     }
 
-    sscanf(buf, "%s %s %s", method, uri, httpver);
+    // Get request line
+    std::string requestLine = strtok(buf, "\r\n");
+
+    // Get header line
+    while ((headerRow = strtok(nullptr, "\r\n"))) {
+        headerArray.emplace_back(headerRow);
+    }
+
+    // Remove non-headder element
+    headerArray.pop_back();
+
+    // Make header element map
+    for (auto row : headerArray) {
+        key = strtok(row, ":");
+        value = strtok(nullptr, ":");
+        headerMap.emplace(key, StrUtil::trim(value));
+    }
+
+    sscanf(requestLine.data(), "%s %s %s", method, uri, httpver);
 
     if (strcmp(method, "HEAD") == 0) {
         m_method = HEAD;
@@ -60,6 +86,7 @@ void HttpBase::request() {
     m_httpver = httpver;
     m_uri = uri;
     m_methodStr = method;
+    m_userAgent = headerMap["User-Agent"];
 }
 
 void HttpBase::setStatusCode() {
@@ -136,11 +163,12 @@ void HttpBase::outputAccessLog(std::ofstream &accessLog) {
     logElementArray.emplace_back(std::to_string(getpid()));
     logElementArray.emplace_back(m_remoteIp + std::string(":") + std::to_string(m_remotePort));
     logElementArray.emplace_back(std::string("(" + m_iptype + ")"));
-    logElementArray.emplace_back(TimeUtil::getNow());
+    logElementArray.emplace_back("[" + TimeUtil::getNow() + "]");
     logElementArray.emplace_back(m_httpver);
     logElementArray.emplace_back(m_methodStr);
     logElementArray.emplace_back(m_uri);
     logElementArray.emplace_back(std::to_string(m_statusCode));
+    logElementArray.emplace_back(m_userAgent);
 
     std::string accessLogStr = StrUtil::implode(logElementArray, " ");
     accessLog << accessLogStr << std::endl;

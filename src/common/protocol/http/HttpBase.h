@@ -36,6 +36,7 @@ private:
     HttpMethod m_method;
     int m_statusCode;
     std::string m_iptype;
+    std::string m_userAgent;
 
     void request();
     void setStatusCode();
