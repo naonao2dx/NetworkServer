@@ -121,7 +121,8 @@ void HttpBase::responseHeader() {
     headerArray.push_back(httpStatusCodeMap[m_statusCode]);
     headerStr = StrUtil::implode(headerArray, " ");
     headerStr += "\r\n";
-    headerStr += "Server: NetworkServer\r\n\r\n";
+    headerStr += "Content-Type: text/html; charset=UTF-8\r\n";
+    headerStr += "Date: " + TimeUtil::getNow() + "\r\n\r\n";
     addResponse(m_connfd, headerStr.c_str());
 }
 
