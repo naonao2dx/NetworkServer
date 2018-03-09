@@ -16,6 +16,8 @@ void ServerManager::constructServer() {
 
 void ServerManager::destructServer() {
     std::cout << "Destruct Server" << std::endl;
+
+    // Kill all child process
     for (auto itr = std::begin(m_serverArray); itr != std::end(m_serverArray); ++itr) {
         (**itr).killChild();
 

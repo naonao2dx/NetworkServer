@@ -19,7 +19,9 @@ ConfigWebServer::ConfigWebServer() {
         std::exit(1);
     }
 
+    // Read config file every line
     while (getline(ifs, buf)) {
+        // Split key and value
         std::vector<std::string> configRow;
         StrUtil::split(buf, "=", configRow);
 

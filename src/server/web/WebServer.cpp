@@ -15,7 +15,7 @@
 
 WebServer::WebServer() {
 #ifdef __APPLE__
-    // Macはプロセスをまたいだmutexロック（PTHREAD_PROCESS_SHARED）が使えない
+    // Can't use mutex lock over multi process at MacOS (PTHREAD_PROCESS_SHARED)
     m_pLock = LockFcntl::getInstance();
 #else
     m_pLock = LockPthread::getInstance();
@@ -37,9 +37,12 @@ void WebServer::start() {
 
     for (auto i = 0; i < m_startServer; i++)
         m_pids.push_back(makeChild(i, listenfd, addrlen));
+
+    // Register SIGINT and SIGTERM function to kill all child process when receive signals
     Signal::Handle(SIGTERM, ServerManager::sigInt);
     Signal::Handle(SIGINT, ServerManager::sigInt);
 
+    // Parent process is paused
     for ( ; ; )
         pause();
 }
@@ -50,6 +53,7 @@ pid_t WebServer::makeChild(int i, int listenfd, int addrlen) {
         std::cout << "fork process: " << pid << std::endl;
         return pid;
     }
+    // Child process
     process(i, listenfd, addrlen);
     return pid;
 }
@@ -59,8 +63,6 @@ void WebServer::process(int i, int listenfd, int addrlen) {
     socklen_t clilen;
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
-
-     std::string file3 = "../resource/webserver/log/access3.log";
 
     auto config = ConfigWebServer::getInstance();
     std::string accesslogFilePath = config->getAccesslogFilePath();

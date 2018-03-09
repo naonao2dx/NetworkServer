@@ -35,26 +35,26 @@ int main(int argc, char** argv) {
 
     switch (argFlag) {
         case CMD_START__: {
-            // pidファイルで多重起動チェック
+            // Check multiple start-up with .pid file
             if (PIDFile::isExistPIDFile(strExec)) {
                 std::cerr << strExec << " process is already exist !" << std::endl;
                 std::cerr << "Check your pid file !" << std::endl;
                 std::cerr << "Running process id is " << PIDFile::getExistPID(strExec);
                 exit(1);
             }
-            // デーモンプロセス化
+            // Daemonize
             Daemon::init();
 
-            // PIDファイルの作成
+            // Make .pid file
             PIDFile::makePIDFile(strExec, getpid());
             break;
         }
         case CMD_STOP__: {
-            // システムコマンドでプロセス終了
+            // kill process
             pid_t pid = PIDFile::getExistPID(strExec);
             int ret = kill(pid, SIGTERM);
             if (ret == 0) {
-                // PIDファイルの削除
+                // Remove .pid file
                 PIDFile::removePIDFile(strExec);
             } else {
                 std::cerr << "Failed to stop process: " << PIDFile::getExistPID(strExec) << std::endl;
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
             return (0);
         }
         case CMD_CONSOLE__: {
-            // pidファイルで多重起動チェック
+            // Check multiple start-up with .pid file
             if (PIDFile::isExistPIDFile(strExec)) {
                 std::cerr << strExec << " process is already exist !" << std::endl;
                 std::cerr << "Check your pid file !" << std::endl;
