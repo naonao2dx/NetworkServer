@@ -14,7 +14,7 @@
 
 class WebServer : public AbstractServer {
 public:
-    WebServer(int listenPort, int childProcessNum);
+    WebServer();
     ~WebServer() {};
 
     std::shared_ptr<Lock> m_pLock;
@@ -24,7 +24,7 @@ public:
 
 private:
     int m_listenPort; // リスニングポート
-    int m_childProcessNum; // preforkのプロセス数
+    int m_startServer; // preforkのプロセス数
     std::vector<pid_t> m_pids; // 子プロセスのpid配列
 
     pid_t makeChild(int i, int listenfd, int addrlen);

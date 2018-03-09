@@ -1,5 +1,5 @@
 # NetworkServer
-NetworkServer is the multifunctional server (now works as only basic Web server).
+NetworkServer is the multifunctional server (now works as only basic Web server).  
 It's developed by C++ with CLion.
 
 ## Quick Start
@@ -10,16 +10,18 @@ It's developed by C++ with CLion.
 ### Command
 #### As foreground process
 * Start server: $ ./NetworkServer console
-* Stop server: Enter "ctrl + c" command
+* Stop server: Enter "Ctrl + c" command
 
 #### As daemon process
 * Start server: $ ./NetworkServer start
 * Stop server: $ ./NetworkServer stop
 
 #### Check
+##### WebServer
 * Access from  web browser to "http://localhost:8080".
 
 ## Features
+#### WebServer
 * "Prefork" multiprocess model (default 10 process).
 * IPv4 / IPv6 compatible.
 * HEAD method returns ony header.
@@ -27,21 +29,24 @@ It's developed by C++ with CLion.
 * Other method returns 405 "Method Not Allowed".
 
 ## Logging
-* Access log output at "resource/webserver/log/access.log"
-* Log format:
-    * process ID
-    * IP address:Listening port (IP protocol)
-    * request accept time
-    * HTTP protocol version
-    * HTTP method
-    * request URI
-    * HTTP status code
-    * User-Agent
+#### WebServer
+* Access log default output: "resource/webserver/log/access.log"
+    * Log format:
+        * process ID
+        * IP address:Client port (IP protocol)
+        * request accept time
+        * HTTP protocol version
+        * HTTP method
+        * request URI
+        * HTTP status code
+        * User-Agent
 
 ## Configuration
-User configuration system is under developing.
-* Default listening port is 8080 (not need "root" privileges).
-* Default prefork process num is 10 .
+#### WebServer
+Configuration file path: "resource/webserver/config/webserver.conf"
+* ListeningPort  (Default is 8080. Not need "root" privileges).
+* StartServer: Prefork process num (Default is 10).
+* AccessLogFilePath
 
 ## Requirement
 * OS: MacOS or Linux

@@ -9,7 +9,7 @@
 
 void ServerManager::constructServer() {
     std::cout << "Construct Server" << std::endl;
-    auto webServer = std::make_shared<WebServer>(8080, 10);
+    auto webServer = std::make_shared<WebServer>();
     m_serverArray.push_back(webServer);
     webServer->start();
 }
