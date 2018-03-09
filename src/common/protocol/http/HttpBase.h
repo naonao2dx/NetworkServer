@@ -35,13 +35,14 @@ private:
     int m_remotePort;
     HttpMethod m_method;
     int m_statusCode;
+    std::string m_iptype;
 
     void request();
     void setStatusCode();
     void responseHeader();
     void responseBody();
 
-    size_t addResponse(int fd, const char *message);
+    size_t addResponse(int fd, const char *message, size_t len = 0);
 
     std::map<int, std::string> httpStatusCodeMap {
             {200, "OK"},
