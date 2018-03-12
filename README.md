@@ -18,6 +18,8 @@ Now implemented:
     * $ mv NetworkServer build/
     * $ cd build
     
+In the case of Windows, exec file name is NetworkServer.exe
+    
 ### Command
 Command: NetworkServer [server] [command]
 * WebServer
@@ -76,4 +78,7 @@ Common configuration file path: "resource/config/NetworkServer.conf".
 * AccessLogFilePath
 
 ## Requirement
-* OS: MacOS or Linux
+* OS:
+    * MacOS
+    * Linux
+    * Windows (Need to use Cygwin)
