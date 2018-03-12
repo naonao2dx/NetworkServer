@@ -2,6 +2,7 @@
 // Created by 竹内 直 on 2018/03/07.
 //
 #include <sstream>
+#include <ctime>
 #include "TimeUtil.h"
 
 std::string TimeUtil::getNow() {

@@ -6,6 +6,7 @@
 #include <strings.h>
 #include <iostream>
 #include <unistd.h>
+#include <cstring>
 #include "TCP.h"
 
 
@@ -14,7 +15,7 @@ int TCP::Listen(const char *host, const char *serv, socklen_t *addrlenp) {
     struct addrinfo hints, *res, *ressave;
     const int on = 1;
 
-    memset(&hints, 0, sizeof(struct addrinfo));
+    std::memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_flags = AI_PASSIVE;
     hints.ai_family = AF_UNSPEC;
     //hints.ai_family = AF_INET;

@@ -7,10 +7,11 @@
 #include <unistd.h>
 #include "LockFcntl.h"
 
+
 void LockFcntl::init() {
     char* lockfile = const_cast<char *>("NetworkServer.lock");
-    mktemp(lockfile);
-    lockfd = open(lockfile, O_CREAT | O_WRONLY, FILESEC_MODE);
+    mkstemp(lockfile);
+    lockfd = open(lockfile, O_CREAT | O_WRONLY, 4); //  4 = FILESEC_MODE
     unlink(lockfile);
 
     lockIt.l_type = F_WRLCK;

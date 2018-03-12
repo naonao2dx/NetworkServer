@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <unistd.h>
 #include "common/system/Signal.h"
 #include "server/manager/ServerManager.h"

@@ -5,11 +5,13 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "LockPthread.h"
 
 void LockPthread::init() {
     int fd;
-    pthread_mutexattr_t mattr;
+    static pthread_mutex_t *mptr;
+    static pthread_mutexattr_t mattr;
 
     fd = open("/dev/zero", O_RDWR, 0);
     mptr = (pthread_mutex_t*) mmap(0, sizeof(pthread_mutex_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);

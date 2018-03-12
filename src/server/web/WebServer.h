@@ -8,8 +8,11 @@
 #include <sys/socket.h>
 #include <string>
 #include <vector>
+#include "../../common/system/Lock.h"
 #include "../../common/system/LockFcntl.h"
+#include "../../common/system/LockPthread.h"
 #include "../AbstractServer.h"
+#include <sys/wait.h>
 
 
 class WebServer : public AbstractServer {
