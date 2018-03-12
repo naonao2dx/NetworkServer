@@ -10,6 +10,8 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <strstream>
+#include <cstring>
+
 
 HttpController::HttpController(int connfd, struct sockaddr* cliaddr) :
 m_connfd(connfd)

@@ -13,7 +13,7 @@ Now implemented:
 * Build by CMake.
     * $ cd NetworkServer
     * $ cmake .
-    * $ cmake --build
+    * $ cmake --build ./ --target NetworkServer
     * $ mkdir build
     * $ mv NetworkServer build/
     * $ cd build
