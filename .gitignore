@@ -1,6 +1,6 @@
 .idea/
 cmake-build-debug/
 cmake-build-release/
-WebServer.pid
-resource/webserver/log/*
+*.pid
+resource/log/*
 !.gitkeep

@@ -13,7 +13,10 @@
 class LockFcntl : public Singleton<LockFcntl>, public Lock {
 private:
     friend class Singleton<LockFcntl>;
-    LockFcntl(){};
+
+private:
+    std::string m_strExec;
+
 public:
     struct flock lockIt, unlockIt;
     int lockfd = -1;

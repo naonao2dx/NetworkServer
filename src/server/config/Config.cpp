@@ -6,17 +6,19 @@
 #include <iostream>
 #include <map>
 #include "Config.h"
-#include "../code/StrUtil.h"
+#include "../../common/code/StrUtil.h"
 
 Config::Config() {
     std::string buf;
     std::string key;
     std::string value;
+    std::unordered_map<std::string, std::string> configMap;
+
 
     std::ifstream ifs(m_configFilePath);
     if (!ifs) {
         std::cerr << "Could not open the file: " << m_configFilePath << std::endl;
-        std::exit(1);
+        std::exit(EXIT_FAILURE);
     }
 
     // Read config file every line
@@ -27,26 +29,11 @@ Config::Config() {
 
         key = StrUtil::trim(configRow[0]);
         value = StrUtil::trim(configRow[1]);
-
-        if (key == "ListeningPort") {
-            m_ListeningPort = std::stoi(value);
-        } else if (key == "StartServer") {
-            m_startServer = std::stoi(value);
-        } else if (key == "AccessLogFilePath") {
-            m_accesslogFilePath = StrUtil::trim(value, "\"");
-        }
-
+        configMap.emplace(key, StrUtil::trim(value, "\""));
     }
+    m_configMap = configMap;
 }
 
-int Config::getListeningPort() const {
-    return m_ListeningPort;
-}
-
-int Config::getStartServer() const {
-    return m_startServer;
-}
-
-std::string &Config::getAccesslogFilePath() {
-    return m_accesslogFilePath;
+std::string Config::getConfigValue(std::string strExec, std::string key) {
+    return m_configMap.at(strExec + "." + key);
 }

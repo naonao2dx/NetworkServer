@@ -97,7 +97,7 @@ void HttpController::setStatusCode() {
     } else {
         m_httpResponse.setUri(m_httpRequest.getUri());
     }
-    m_httpResponse.setUri("../resource/webserver/html" + m_httpResponse.getUri());
+    m_httpResponse.setUri("../resource/html" + m_httpResponse.getUri());
 
     // Set status code and return file descriptor
     if ( (readfd = open(m_httpResponse.getUri().c_str(), O_RDONLY)) == -1) {
@@ -117,7 +117,7 @@ void HttpController::responseHeader() {
     headerArray.push_back(httpStatusCodeMap[m_httpResponse.getStatusCode()]);
     headerStr = StrUtil::implode(headerArray, " ");
     headerStr += "\r\n";
-    headerStr += "Content-Type: text/html; charset=UTF-8\r\n";
+    //headerStr += "Content-Type: text/html; charset=UTF-8\r\n";
     headerStr += "Date: " + TimeUtil::getNow() + "\r\n\r\n";
     addResponse(m_connfd, headerStr.c_str());
 }

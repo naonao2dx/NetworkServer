@@ -7,17 +7,17 @@
 
 
 #include <vector>
-#include "AbstractServer.h"
-#include "../common/code/Singleton.h"
+#include "../AbstractServer.h"
+#include "../../common/code/Singleton.h"
 
 class ServerManager : public Singleton<ServerManager> {
 private:
     friend class Singleton<ServerManager>;
-    ServerManager(){};
+    ServerManager() = default;
 public:
     static void sigInt(int signo);
 
-    void constructServer();
+    void constructServer(std::string strExec);
     void destructServer();
 
     std::vector<std::shared_ptr<AbstractServer>> m_serverArray;

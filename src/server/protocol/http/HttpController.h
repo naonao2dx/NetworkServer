@@ -14,7 +14,6 @@
 
 class HttpController {
 public:
-    HttpController();
     HttpController(int connfd, struct sockaddr* cliaddr);
 
     // Request model class
@@ -26,7 +25,7 @@ public:
     void process();
     void outputAccessLog(std::ofstream &accessLog);
 
-private:
+protected:
     // Connection socket descriptor
     int m_connfd;
 
@@ -34,9 +33,9 @@ private:
     int m_readfd;
 
     void request();
-    void setStatusCode();
+    virtual void setStatusCode();
     void responseHeader();
-    void responseBody();
+    virtual void responseBody();
 
     size_t addResponse(int fd, const char *message, size_t len = 0);
 

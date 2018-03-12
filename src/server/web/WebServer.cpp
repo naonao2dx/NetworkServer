@@ -3,27 +3,30 @@
 //
 
 #include "WebServer.h"
-#include "../../common/protocol/tcp/TCP.h"
+#include "../protocol/tcp/TCP.h"
+#include "../config/Config.h"
 #include "../../common/system/Signal.h"
-#include "../ServerManager.h"
-#include "http/HttpController.h"
-#include "../../common/config/Config.h"
+#include "../manager/ServerManager.h"
+#include "../protocol/http/HttpController.h"
+#include "../protocol/http/APIController.h"
 #include <unistd.h>
-#include <iostream>
 #include <netinet/in.h>
 
 
-WebServer::WebServer() {
+WebServer::WebServer(std::string strExec)
+: m_strExec(strExec)
+{
 #ifdef __APPLE__
     // Can't use mutex lock over multi process at MacOS (PTHREAD_PROCESS_SHARED)
     m_pLock = LockFcntl::getInstance();
 #else
     m_pLock = LockPthread::getInstance();
 #endif
-
     auto config = Config::getInstance();
-    m_listenPort = config->getListeningPort();
-    m_startServer = config->getStartServer();
+    std::string listeningPort = config->getConfigValue(m_strExec, "ListenPort");
+    std::string startServer = config->getConfigValue(m_strExec, "StartServer");
+    m_listenPort = std::stoi(listeningPort);
+    m_startServer = std::stoi(startServer);
 }
 
 void WebServer::start() {
@@ -65,7 +68,7 @@ void WebServer::process(int i, int listenfd, int addrlen) {
     cliaddr = new struct sockaddr;
 
     auto config = Config::getInstance();
-    std::string accesslogFilePath = config->getAccesslogFilePath();
+    std::string accesslogFilePath = config->getConfigValue(m_strExec, "AccessLogFilePath");
     std::ofstream accesslog(accesslogFilePath, std::ios::out | std::ios::app);
     if (!accesslog) {
         std::cerr << "Could not file open: " << accesslogFilePath << std::endl;
@@ -73,17 +76,22 @@ void WebServer::process(int i, int listenfd, int addrlen) {
     }
 
     for ( ; ; ) {
-        clilen = addrlen;
+        std::unique_ptr<HttpController> httpController;
 
+        clilen = addrlen;
         m_pLock->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
         m_pLock->release();
 
-        HttpController httpBase = HttpController(connfd, cliaddr);
-        httpBase.process();
-        httpBase.outputAccessLog(accesslog);
-
+        if ("Web" == m_strExec) {
+            httpController.reset(new HttpController(connfd, cliaddr));
+        } else if ("API" == m_strExec) {
+            httpController.reset(new APIController(connfd, cliaddr));
+        }
+        httpController->process();
         close(connfd);
+
+        httpController->outputAccessLog(accesslog);
 
     }
 }

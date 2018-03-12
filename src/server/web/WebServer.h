@@ -14,13 +14,15 @@
 
 class WebServer : public AbstractServer {
 public:
-    WebServer();
-    ~WebServer() {};
+    WebServer(){};
+    WebServer(std::string strExec);
 
     std::shared_ptr<Lock> m_pLock;
 
     void start() override;
     void killChild() override;
+
+    std::string m_strExec;
 
 private:
     int m_listenPort; // リスニングポート

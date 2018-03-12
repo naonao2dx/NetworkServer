@@ -8,7 +8,7 @@
 #include "LockFcntl.h"
 
 void LockFcntl::init() {
-    char* lockfile = "./webserver.lock";
+    char* lockfile = const_cast<char *>("NetworkServer.lock");
     mktemp(lockfile);
     lockfd = open(lockfile, O_CREAT | O_WRONLY, FILESEC_MODE);
     unlink(lockfile);

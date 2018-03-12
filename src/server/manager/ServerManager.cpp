@@ -5,13 +5,18 @@
 #include <new>
 #include <iostream>
 #include "ServerManager.h"
-#include "web/WebServer.h"
+#include "../web/WebServer.h"
 
-void ServerManager::constructServer() {
+void ServerManager::constructServer(std::string strExec) {
     std::cout << "Construct Server" << std::endl;
-    auto webServer = std::make_shared<WebServer>();
-    m_serverArray.push_back(webServer);
-    webServer->start();
+    if ("Web" == strExec || "API" == strExec) {
+        auto webServer = std::make_shared<WebServer>(strExec);
+        m_serverArray.push_back(webServer);
+        webServer->start();
+    } else {
+        std::cerr << "No such server";
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 void ServerManager::destructServer() {
