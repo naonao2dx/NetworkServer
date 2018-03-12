@@ -1,51 +1,78 @@
 # NetworkServer
-NetworkServer is the multifunctional server (now works as only basic Web server).  
-It's developed by C++ with CLion.
+NetworkServer is the multifunctional server.  
+Now implemented:  
+* HTML server
+    * Returns static contents (like html, img, etc)
+* API server
+    * Returns data from C++ API program
 
 ## Quick Start
 ### Build
 * Clone the repository.
+    * $ git clone https://github.com/naonao2dx/NetworkServer.git
 * Build by CMake.
-
+    * $ cd NetworkServer
+    * $ cmake .
+    * $ cmake --build
+    * $ mkdir build
+    * $ mv NetworkServer build/
+    * $ cd build
+    
 ### Command
-#### As foreground process
-* Start server: $ ./NetworkServer console
-* Stop server: Enter "Ctrl + c" command
-
-#### As daemon process
-* Start server: $ ./NetworkServer start
-* Stop server: $ ./NetworkServer stop
+Command: NetworkServer [server] [command]
+* WebServer
+    * Forground
+        * Start server: $ ./NetworkServer Web console
+        * Stop server: Enter "Ctrl + c" command
+    * Background (Daemon process)
+        * Start server: $ ./NetworkServer Web start
+        * Stop server: $ ./NetworkServer Web stop
+        
+* APIServer
+    * Forground
+        * Start server: $ ./NetworkServer API console
+        * Stop server: Enter "Ctrl + c" command
+    * Background (Daemon process)
+        * Start server: $ ./NetworkServer API start
+        * Stop server: $ ./NetworkServer API stop
 
 #### Check
 ##### WebServer
 * Access from  web browser to "http://localhost:8080".
+##### APIServer
+* Access from  web browser to "http://localhost:8081".
 
 ## Features
-#### WebServer
 * "Prefork" multiprocess model (default 10 process).
 * IPv4 / IPv6 compatible.
-* HEAD method returns ony header.
-* GET and POST method works the same.
-* Other method returns 405 "Method Not Allowed".
+* HTTP method
+    * HEAD method returns ony response header.
+    * GET and POST method returns response header and bodoy.
+    * Other method returns 405 "Method Not Allowed".
 
 ## Logging
-#### WebServer
-* Access log default output: "resource/webserver/log/access.log"
-    * Log format:
-        * process ID
-        * IP address:Client port (IP protocol)
-        * request accept time
-        * HTTP protocol version
-        * HTTP method
-        * request URI
-        * HTTP status code
-        * User-Agent
+* Access log default output: 
+    * WebServer
+        * resource/log/web_access.log
+    * APIServer
+        * resource/log/api_access.log
+* Log format:
+    * process ID
+    * IP address:Client port (IP protocol)
+    * request accept time
+    * HTTP protocol version
+    * HTTP method
+    * request URI
+    * HTTP status code
+    * User-Agent
 
 ## Configuration
 #### WebServer
-Configuration file path: "resource/webserver/config/webserver.conf"
-* ListeningPort  (Default is 8080. Not need "root" privileges).
-* StartServer: Prefork process num (Default is 10).
+Common configuration file path: "resource/config/NetworkServer.conf".
+* ListeningPort: 
+    * TCP port. Using well-known port like 80 need root privileges.
+* StartServer:
+    * Prefork process num (Default is 10).
 * AccessLogFilePath
 
 ## Requirement
