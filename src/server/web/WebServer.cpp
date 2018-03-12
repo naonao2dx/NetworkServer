@@ -6,7 +6,7 @@
 #include "../../common/protocol/tcp/TCP.h"
 #include "../../common/system/Signal.h"
 #include "../ServerManager.h"
-#include "../../common/protocol/http/HttpBase.h"
+#include "../../common/protocol/http/HttpController.h"
 #include "ConfigWebServer.h"
 #include <unistd.h>
 #include <iostream>
@@ -79,7 +79,7 @@ void WebServer::process(int i, int listenfd, int addrlen) {
         connfd = accept(listenfd, cliaddr, &clilen);
         m_pLock->release();
 
-        HttpBase httpBase = HttpBase(connfd, cliaddr);
+        HttpController httpBase = HttpController(connfd, cliaddr);
         httpBase.process();
         httpBase.outputAccessLog(accesslog);
 

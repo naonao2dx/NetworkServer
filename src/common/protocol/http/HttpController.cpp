@@ -2,7 +2,7 @@
 // Created by 竹内 直 on 2018/03/08.
 //
 
-#include "HttpBase.h"
+#include "HttpController.h"
 #include "../../code/StrUtil.h"
 #include "../../code/TimeUtil.h"
 #include <iostream>
@@ -12,7 +12,7 @@
 #include <fcntl.h>
 #include <strstream>
 
-HttpBase::HttpBase(int connfd, struct sockaddr* cliaddr) :
+HttpController::HttpController(int connfd, struct sockaddr* cliaddr) :
 m_connfd(connfd)
 {
     char ipv6addr[INET6_ADDRSTRLEN];
@@ -36,7 +36,7 @@ m_connfd(connfd)
     }
 }
 
-void HttpBase::request() {
+void HttpController::request() {
     char buf[1024];
     char method[10];
     char uri[100];
@@ -89,7 +89,7 @@ void HttpBase::request() {
     m_userAgent = headerMap["User-Agent"];
 }
 
-void HttpBase::setStatusCode() {
+void HttpController::setStatusCode() {
     int readfd;
 
     if (m_method == OTHER) {
@@ -112,7 +112,7 @@ void HttpBase::setStatusCode() {
     }
 }
 
-void HttpBase::responseHeader() {
+void HttpController::responseHeader() {
     std::vector<std::string> headerArray;
     std::string headerStr;
 
@@ -126,7 +126,7 @@ void HttpBase::responseHeader() {
     addResponse(m_connfd, headerStr.c_str());
 }
 
-void HttpBase::responseBody() {
+void HttpController::responseBody() {
     size_t len = 0;
     char buf[1024];
 
@@ -141,7 +141,7 @@ void HttpBase::responseBody() {
 
 }
 
-size_t HttpBase::addResponse(int fd, const char *message, size_t len) {
+size_t HttpController::addResponse(int fd, const char *message, size_t len) {
     if (len == 0) {
         len = strlen(message);
     }
@@ -152,14 +152,14 @@ size_t HttpBase::addResponse(int fd, const char *message, size_t len) {
     return len;
 }
 
-void HttpBase::process() {
+void HttpController::process() {
     request();
     setStatusCode();
     responseHeader();
     responseBody();
 }
 
-void HttpBase::outputAccessLog(std::ofstream &accessLog) {
+void HttpController::outputAccessLog(std::ofstream &accessLog) {
     std::vector<std::string> logElementArray;
     logElementArray.emplace_back(std::to_string(getpid()));
     logElementArray.emplace_back(m_remoteIp + std::string(":") + std::to_string(m_remotePort));

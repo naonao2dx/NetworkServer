@@ -2,8 +2,8 @@
 // Created by 竹内 直 on 2018/03/08.
 //
 
-#ifndef NETWORKSERVER_HTTPBASE_H
-#define NETWORKSERVER_HTTPBASE_H
+#ifndef NETWORKSERVER_HTTPCONTROLLER_H
+#define NETWORKSERVER_HTTPCONTROLLER_H
 
 #include <string>
 #include <map>
@@ -16,10 +16,10 @@ enum HttpMethod {
     OTHER,
 };
 
-class HttpBase {
+class HttpController {
 public:
-    HttpBase();
-    HttpBase(int connfd, struct sockaddr* cliaddr);
+    HttpController();
+    HttpController(int connfd, struct sockaddr* cliaddr);
 
     void process();
     void outputAccessLog(std::ofstream &accessLog);
@@ -54,4 +54,4 @@ private:
 };
 
 
-#endif //NETWORKSERVER_HTTPBASE_H
+#endif //NETWORKSERVER_HTTPCONTROLLER_H
