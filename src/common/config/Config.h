@@ -7,12 +7,12 @@
 
 
 #include <string>
-#include "../../common/code/Singleton.h"
+#include "../code/Singleton.h"
 
-class ConfigWebServer : public Singleton<ConfigWebServer> {
+class Config : public Singleton<Config> {
 private:
-    friend class Singleton<ConfigWebServer>;
-    ConfigWebServer();
+    friend class Singleton<Config>;
+    Config();
 
 public:
     int getListeningPort() const;

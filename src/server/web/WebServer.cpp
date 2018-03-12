@@ -6,8 +6,8 @@
 #include "../../common/protocol/tcp/TCP.h"
 #include "../../common/system/Signal.h"
 #include "../ServerManager.h"
-#include "../../common/protocol/http/HttpController.h"
-#include "ConfigWebServer.h"
+#include "http/HttpController.h"
+#include "../../common/config/Config.h"
 #include <unistd.h>
 #include <iostream>
 #include <netinet/in.h>
@@ -21,7 +21,7 @@ WebServer::WebServer() {
     m_pLock = LockPthread::getInstance();
 #endif
 
-    auto config = ConfigWebServer::getInstance();
+    auto config = Config::getInstance();
     m_listenPort = config->getListeningPort();
     m_startServer = config->getStartServer();
 }
@@ -64,7 +64,7 @@ void WebServer::process(int i, int listenfd, int addrlen) {
     struct sockaddr *cliaddr;
     cliaddr = new struct sockaddr;
 
-    auto config = ConfigWebServer::getInstance();
+    auto config = Config::getInstance();
     std::string accesslogFilePath = config->getAccesslogFilePath();
     std::ofstream accesslog(accesslogFilePath, std::ios::out | std::ios::app);
     if (!accesslog) {

@@ -5,10 +5,10 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include "ConfigWebServer.h"
-#include "../../common/code/StrUtil.h"
+#include "Config.h"
+#include "../code/StrUtil.h"
 
-ConfigWebServer::ConfigWebServer() {
+Config::Config() {
     std::string buf;
     std::string key;
     std::string value;
@@ -39,14 +39,14 @@ ConfigWebServer::ConfigWebServer() {
     }
 }
 
-int ConfigWebServer::getListeningPort() const {
+int Config::getListeningPort() const {
     return m_ListeningPort;
 }
 
-int ConfigWebServer::getStartServer() const {
+int Config::getStartServer() const {
     return m_startServer;
 }
 
-std::string &ConfigWebServer::getAccesslogFilePath() {
+std::string &Config::getAccesslogFilePath() {
     return m_accesslogFilePath;
 }
