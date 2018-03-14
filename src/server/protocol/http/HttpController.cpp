@@ -130,9 +130,10 @@ void HttpController::responseBody() {
         auto fileSize = static_cast<size_t>(m_ifs.tellg());
         m_ifs.seekg(0, std::ifstream::beg);
 
-        auto* buf = new char[fileSize];
+        auto buf = new char[fileSize];
         m_ifs.read(buf, fileSize);
         addResponse(m_connfd, buf, fileSize);
+        delete(buf);
     }
 }
 
