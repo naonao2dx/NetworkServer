@@ -1,7 +1,7 @@
 # NetworkServer
 NetworkServer is the multifunctional server.  
 Now implemented:  
-* HTML server
+* Web (HTML) server
     * Returns static contents (like html, img, etc)
 * API server
     * Returns data from C++ API program
@@ -23,7 +23,7 @@ In the case of Windows, exec file name is NetworkServer.exe
 ### Command
 Command: NetworkServer [server] [command]
 * WebServer
-    * Forground
+    * Foreground
         * Start server: $ ./NetworkServer Web console
         * Stop server: Enter "Ctrl + c" command
     * Background (Daemon process)
@@ -31,7 +31,7 @@ Command: NetworkServer [server] [command]
         * Stop server: $ ./NetworkServer Web stop
         
 * APIServer
-    * Forground
+    * Foreground
         * Start server: $ ./NetworkServer API console
         * Stop server: Enter "Ctrl + c" command
     * Background (Daemon process)
@@ -49,7 +49,7 @@ Command: NetworkServer [server] [command]
 * IPv4 / IPv6 compatible.
 * HTTP method
     * HEAD method returns ony response header.
-    * GET and POST method returns response header and bodoy.
+    * GET and POST method returns response header and body.
     * Other method returns 405 "Method Not Allowed".
 
 ## Logging
@@ -81,4 +81,4 @@ Common configuration file path: "resource/config/NetworkServer.conf".
 * OS:
     * MacOS
     * Linux
-    * Windows (Need to use Cygwin)
+    * Windows (Need Cygwin to compile)
