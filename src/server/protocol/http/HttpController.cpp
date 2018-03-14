@@ -85,8 +85,6 @@ void HttpController::request() {
 }
 
 void HttpController::setStatusCode() {
-    int readfd;
-
     // Non-acceptable method
     if (m_enableMethodSet.count(m_httpRequest.getMethod()) == 0) {
         m_httpResponse.setStatusCode(405);
@@ -101,12 +99,11 @@ void HttpController::setStatusCode() {
     }
     m_httpResponse.setUri("../resource/html" + m_httpResponse.getUri());
 
-    // Set status code and return file descriptor
-    if ( (readfd = open(m_httpResponse.getUri().c_str(), O_RDONLY)) == -1) {
-        m_httpResponse.setStatusCode(404);
-    } else {
+    m_ifs.reset(new std::ifstream(m_httpResponse.getUri(), std::ios::in | std::ios::binary));
+    if (m_ifs) {
         m_httpResponse.setStatusCode(200);
-        m_readfd = readfd;
+    } else {
+        m_httpResponse.setStatusCode(404);
     }
 }
 
@@ -126,16 +123,18 @@ void HttpController::responseHeader() {
 
 void HttpController::responseBody() {
     size_t len = 0;
-    char buf[1024];
 
     if (m_httpResponse.getStatusCode() == 200) {
-        while ( (len = (size_t) read(m_readfd, buf, 1024)) > 0) {
-            if (addResponse(m_connfd, buf, len)) {
-                break;
-            }
-        }
-        close(m_readfd);
+        m_ifs->seekg(0, std::ifstream::end);
+        auto fileSize = static_cast<size_t>(m_ifs->tellg());
+        m_ifs->seekg(0, std::ifstream::beg);
+
+        auto* buf = new char[fileSize];
+        m_ifs->read(buf, fileSize);
+        addResponse(m_connfd, buf, fileSize);
     }
+
+    m_ifs->close();
 
 }
 

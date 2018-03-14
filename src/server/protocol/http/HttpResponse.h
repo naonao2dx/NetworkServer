@@ -17,7 +17,7 @@ private:
     int m_statusCode;
 
 public:
-    inline int getStatusCode() {
+    inline int getStatusCode() const {
         return m_statusCode;
     }
 
@@ -25,7 +25,7 @@ public:
         m_statusCode = statusCode;
     }
 
-    inline std::string getUri() {
+    inline std::string getUri() const {
         return m_uri;
     }
 
@@ -33,7 +33,7 @@ public:
         m_uri = uri;
     }
 
-    inline std::unordered_map<std::string, std::string> getResponseHeader() {
+    inline std::unordered_map<std::string, std::string> getResponseHeader() const {
         return m_responseHeader;
     }
 

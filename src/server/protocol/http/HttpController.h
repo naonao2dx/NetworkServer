@@ -29,8 +29,8 @@ protected:
     // Connection socket descriptor
     int m_connfd;
 
-    // File descriptor
-    int m_readfd;
+    // Response file stream
+    std::unique_ptr<std::ifstream> m_ifs;
 
     void request();
     virtual void setStatusCode();

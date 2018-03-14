@@ -30,7 +30,7 @@ public:
         m_remoteAddress = std::string(remoteAddress);
     }
 
-    inline int getRemotePort() {
+    inline int getRemotePort() const {
         return m_remotePort;
     }
 
@@ -38,7 +38,7 @@ public:
         m_remotePort = port;
     }
 
-    inline std::string getIpProtocol() {
+    inline std::string getIpProtocol() const {
         return m_ipProtocol;
     }
 
@@ -46,7 +46,7 @@ public:
         m_ipProtocol = std::string(ipProtocol);
     }
 
-    inline std::string getHttpVersion() {
+    inline std::string getHttpVersion() const {
         return m_httpVersion;
     }
 
@@ -54,7 +54,7 @@ public:
         m_httpVersion = std::string(httpver);
     }
 
-    inline std::string getMethod() {
+    inline std::string getMethod() const {
         return m_method;
     }
 
@@ -62,7 +62,7 @@ public:
         m_method = std::string(method);
     }
 
-    inline std::string getUri() {
+    inline std::string getUri() const {
         return m_uri;
     }
 
@@ -70,7 +70,7 @@ public:
         m_uri = std::string(uri);
     }
 
-    inline std::unordered_map<std::string, std::string> getRequestHeader() {
+    inline std::unordered_map<std::string, std::string> getRequestHeader() const {
         return m_requestHeader;
     }
 
