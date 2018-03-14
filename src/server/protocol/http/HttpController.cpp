@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <strstream>
 #include <cstring>
+#include <new>
 
 
 HttpController::HttpController(int connfd, struct sockaddr* cliaddr) :
@@ -99,11 +100,11 @@ void HttpController::setStatusCode() {
     }
     m_httpResponse.setUri("../resource/html" + m_httpResponse.getUri());
 
-    m_ifs.reset(new std::ifstream(m_httpResponse.getUri(), std::ios::in | std::ios::binary));
-    if (m_ifs) {
-        m_httpResponse.setStatusCode(200);
-    } else {
+    m_ifs.open(m_httpResponse.getUri(), std::ios::in | std::ios::binary);
+    if (!m_ifs) {
         m_httpResponse.setStatusCode(404);
+    } else {
+        m_httpResponse.setStatusCode(200);
     }
 }
 
@@ -125,17 +126,14 @@ void HttpController::responseBody() {
     size_t len = 0;
 
     if (m_httpResponse.getStatusCode() == 200) {
-        m_ifs->seekg(0, std::ifstream::end);
-        auto fileSize = static_cast<size_t>(m_ifs->tellg());
-        m_ifs->seekg(0, std::ifstream::beg);
+        m_ifs.seekg(0, std::ifstream::end);
+        auto fileSize = static_cast<size_t>(m_ifs.tellg());
+        m_ifs.seekg(0, std::ifstream::beg);
 
         auto* buf = new char[fileSize];
-        m_ifs->read(buf, fileSize);
+        m_ifs.read(buf, fileSize);
         addResponse(m_connfd, buf, fileSize);
     }
-
-    m_ifs->close();
-
 }
 
 size_t HttpController::addResponse(int fd, const char *message, size_t len) {

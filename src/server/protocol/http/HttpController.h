@@ -30,7 +30,7 @@ protected:
     int m_connfd;
 
     // Response file stream
-    std::unique_ptr<std::ifstream> m_ifs;
+    std::ifstream m_ifs;
 
     void request();
     virtual void setStatusCode();
