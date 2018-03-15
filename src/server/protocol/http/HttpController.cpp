@@ -133,7 +133,7 @@ void HttpController::responseBody() {
         auto buf = new char[fileSize];
         m_ifs.read(buf, fileSize);
         addResponse(m_connfd, buf, fileSize);
-        delete(buf);
+        delete [] buf;
     }
 }
 
