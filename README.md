@@ -18,7 +18,10 @@ Now implemented:
     * $ mv NetworkServer build/
     * $ cd build
     
-In the case of Windows, exec file name is NetworkServer.exe
+In the case of Windows, exec file name is NetworkServer.exe  
+
+If you use Docker, you can build this program easily as below
+* $ docker run -i -t --name=networkserver -p 8080:8080 naonao2dx/networkserver /bin/bash
     
 ### Command
 Command: NetworkServer [server] [command]
