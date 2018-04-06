@@ -5,7 +5,7 @@
 #include "APIController.h"
 #include "../../../common/code/StrUtil.h"
 #include <netinet/in.h>
-#include <strstream>
+#include <sstream>
 
 APIController::APIController(int connfd, struct sockaddr *cliaddr)
 : HttpController(connfd, cliaddr){
