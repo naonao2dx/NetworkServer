@@ -20,7 +20,8 @@ WebServer::WebServer(std::string strExec)
     // Can't use mutex lock over multi process at MacOS (PTHREAD_PROCESS_SHARED)
     m_pLock = LockFcntl::getInstance();
 #else
-    m_pLock = LockPthread::getInstance();
+    //m_pLock = LockPthread::getInstance();
+    m_pLock = LockFcntl::getInstance();
 #endif
     auto config = Config::getInstance();
     std::string listeningPort = config->getConfigValue(m_strExec, "ListenPort");
