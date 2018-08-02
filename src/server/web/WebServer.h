@@ -20,17 +20,17 @@ public:
     WebServer(){};
     WebServer(std::string strExec);
 
-    std::shared_ptr<Lock> m_pLock;
+    std::shared_ptr<Lock> _pLock;
 
     void start() override;
     void killChild() override;
 
-    std::string m_strExec;
+    std::string _strExec;
 
 private:
-    int m_listenPort; // リスニングポート
-    int m_startServer; // preforkのプロセス数
-    std::vector<pid_t> m_pids; // 子プロセスのpid配列
+    int _listenPort; // リスニングポート
+    int _startServer; // preforkのプロセス数
+    std::vector<pid_t> _pids; // 子プロセスのpid配列
 
     pid_t makeChild(int i, int listenfd, int addrlen);
     void process(int i, int listenfd, int addrlen);

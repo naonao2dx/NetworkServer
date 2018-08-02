@@ -24,3 +24,22 @@ std::string StrUtil::trim(const std::string &string, const char *trimCharList) {
 
     return retStr;
 }
+
+void StrUtil::split(const std::string& s, const std::string& delim, std::vector<std::string>& result) {
+    result.clear();
+
+    using string = std::string;
+    string::size_type pos = 0;
+
+    while (pos != string::npos) {
+        string::size_type p = s.find(delim, pos);
+
+        if (p == string::npos) {
+            result.push_back(s.substr(pos));
+            break;
+        } else {
+            result.push_back(s.substr(pos, p - pos));
+        }
+        pos = p + delim.size();
+    }
+}

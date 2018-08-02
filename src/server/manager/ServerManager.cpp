@@ -11,7 +11,7 @@ void ServerManager::constructServer(std::string strExec) {
     std::cout << "Construct Server" << std::endl;
     if ("Web" == strExec || "API" == strExec) {
         auto webServer = std::make_shared<WebServer>(strExec);
-        m_serverArray.push_back(webServer);
+        _serverArray.push_back(webServer);
         webServer->start();
     } else {
         std::cerr << "No such server";
@@ -23,7 +23,7 @@ void ServerManager::destructServer() {
     std::cout << "Destruct Server" << std::endl;
 
     // Kill all child process
-    for (auto itr = std::begin(m_serverArray); itr != std::end(m_serverArray); ++itr) {
+    for (auto itr = std::begin(_serverArray); itr != std::end(_serverArray); ++itr) {
         (**itr).killChild();
 
     }

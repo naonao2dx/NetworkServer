@@ -20,19 +20,19 @@ public:
 
 public:
     static std::shared_ptr<T> getInstance() {
-        auto retPtr = pInstance.lock();
+        auto retPtr = instance.lock();
         if (!retPtr) {
             retPtr = std::shared_ptr<T>(new T{});
-            pInstance = std::weak_ptr<T>(retPtr);
+            instance = std::weak_ptr<T>(retPtr);
             return retPtr;
         }
-        return pInstance.lock();
+        return instance.lock();
     }
 
 private:
-    static std::weak_ptr<T> pInstance;
+    static std::weak_ptr<T> instance;
 };
 
-template <typename T> std::weak_ptr<T> Singleton<T>::pInstance;
+template <typename T> std::weak_ptr<T> Singleton<T>::instance;
 
 #endif //WEBSERVER_SINGLETON_H

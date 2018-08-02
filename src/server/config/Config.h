@@ -20,8 +20,8 @@ public:
     std::string getConfigValue(std::string strExec, std::string key);
 
 private:
-    std::unordered_map<std::string, std::string> m_configMap;
-    const std::string m_configFilePath = "../resource/config/NetworkServer.conf";
+    std::unordered_map<std::string, std::string> _configMap;
+    const std::string _configFilePath = "../resource/config/NetworkServer.conf";
 };
 
 #endif //NETWORKSERVER_CONFIGWEBSERVER_H

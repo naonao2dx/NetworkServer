@@ -20,7 +20,7 @@ public:
     void constructServer(std::string strExec);
     void destructServer();
 
-    std::vector<std::shared_ptr<AbstractServer>> m_serverArray;
+    std::vector<std::shared_ptr<AbstractServer>> _serverArray;
 
 protected:
 

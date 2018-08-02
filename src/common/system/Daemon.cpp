@@ -14,20 +14,19 @@ void Daemon::init() {
     pid_t pid = 0;
 
     std::cout << getpid() << std::endl;
-    // 親プロセスを終了
+    // kill parent process
     if ( (pid = fork()) != 0 )
         exit(0);
-    // セッションリーダー化
+    // set session leader
     setsid();
-    // HUPシグナルを無視
+    // ignore HUP signal
     Signal::Handle(SIGHUP, SIG_IGN);
-    // 親プロセスを切り離し
+    // kill parent process
     if ( (pid = fork()) != 0)
         exit(0);
 
-    // ファイルモード作成マスクのクリア
     umask(0);
-    // 全てのファイルディスクリプタをクローズ
+    // close all file descriptor
     for (auto i = 0; i < MAXFD; i++) {
         close(i);
     }

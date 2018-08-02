@@ -12,70 +12,70 @@
 
 class HttpRequest {
 private:
-    std::string m_remoteAddress;
-    int m_remotePort;
-    std::string m_ipProtocol;
-    std::string m_httpVersion;
-    std::string m_method;
-    std::string m_uri;
-    std::unordered_map<std::string, std::string> m_requestHeader;
-    std::string m_requestBody;
+    std::string _remoteAddress;
+    int _remotePort;
+    std::string _ipProtocol;
+    std::string _httpVersion;
+    std::string _method;
+    std::string _uri;
+    std::unordered_map<std::string, std::string> _requestHeader;
+    std::string _requestBody;
 
 public:
     inline std::string getRemoteAddress() {
-        return m_remoteAddress;
+        return _remoteAddress;
     }
 
-    inline void setRemoteAddress(std::string remoteAddress) {
-        m_remoteAddress = std::string(remoteAddress);
+    inline void setRemoteAddress(char* remoteAddress) {
+        _remoteAddress = std::string(remoteAddress);
     }
 
     inline int getRemotePort() const {
-        return m_remotePort;
+        return _remotePort;
     }
 
     inline void setRemotePort(int port) {
-        m_remotePort = port;
+        _remotePort = port;
     }
 
     inline std::string getIpProtocol() const {
-        return m_ipProtocol;
+        return _ipProtocol;
     }
 
     inline void setIpProtocol(std::string ipProtocol) {
-        m_ipProtocol = std::string(ipProtocol);
+        _ipProtocol = ipProtocol;
     }
 
     inline std::string getHttpVersion() const {
-        return m_httpVersion;
+        return _httpVersion;
     }
 
-    inline void setHttpVersion(std::string httpver) {
-        m_httpVersion = std::string(httpver);
+    inline void setHttpVersion(char* httpver) {
+        _httpVersion = std::string(httpver);
     }
 
     inline std::string getMethod() const {
-        return m_method;
+        return _method;
     }
 
-    inline void setMethod(std::string method) {
-        m_method = std::string(method);
+    inline void setMethod(char* method) {
+        _method = std::string(method);
     }
 
     inline std::string getUri() const {
-        return m_uri;
+        return _uri;
     }
 
-    inline void setUri(std::string uri) {
-        m_uri = std::string(uri);
+    inline void setUri(char* uri) {
+        _uri = std::string(uri);
     }
 
     inline std::unordered_map<std::string, std::string> getRequestHeader() const {
-        return m_requestHeader;
+        return _requestHeader;
     }
 
     inline void setRequestHeader(std::unordered_map<std::string, std::string> &requestHeader) {
-        m_requestHeader = requestHeader;
+        _requestHeader = requestHeader;
     }
 };
 

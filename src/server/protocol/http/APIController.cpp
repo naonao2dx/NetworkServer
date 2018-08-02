@@ -14,21 +14,21 @@ APIController::APIController(int connfd, struct sockaddr *cliaddr)
 
 void APIController::setStatusCode() {
     // Non-acceptable method
-    if (m_enableMethodSet.count(m_httpRequest.getMethod()) == 0) {
-        m_httpResponse.setStatusCode(405);
+    if (_enableMethodSet.count(_httpRequest.getMethod()) == 0) {
+        _httpResponse.setStatusCode(405);
         return;
     }
 
     // API server usually response status 200, regardless of uri status.
-    m_httpResponse.setStatusCode(200);
+    _httpResponse.setStatusCode(200);
 }
 
 void APIController::responseBody() {
-    if (m_httpResponse.getStatusCode() == 200) {
+    if (_httpResponse.getStatusCode() == 200) {
 
 
         std::string message("This message is output from C++ API program !");
 
-        addResponse(m_connfd, message.data(), message.size());
+        addResponse(_connfd, message.data(), message.size());
     }
 }

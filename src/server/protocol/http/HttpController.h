@@ -17,20 +17,20 @@ public:
     HttpController(int connfd, struct sockaddr* cliaddr);
 
     // Request model class
-    HttpRequest m_httpRequest;
+    HttpRequest _httpRequest;
 
     // Response model class
-    HttpResponse m_httpResponse;
+    HttpResponse _httpResponse;
 
     void process();
     void outputAccessLog(std::ofstream &accessLog);
 
 protected:
     // Connection socket descriptor
-    int m_connfd;
+    int _connfd;
 
     // Response file stream
-    std::ifstream m_ifs;
+    std::ifstream _ifs;
 
     void request();
     virtual void setStatusCode();
@@ -47,7 +47,7 @@ protected:
     };
 
     // Acceptable method set
-    std::set<std::string> m_enableMethodSet = {"HEAD", "GET", "POST"};
+    std::set<std::string> _enableMethodSet = {"HEAD", "GET", "POST"};
 
 };
 

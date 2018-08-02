@@ -11,34 +11,34 @@
 
 class HttpResponse {
 private:
-    std::unordered_map<std::string, std::string> m_responseHeader;
-    std::string m_responseBody;
-    std::string m_uri;
-    int m_statusCode;
+    std::unordered_map<std::string, std::string> _responseHeader;
+    std::string _responseBody;
+    std::string _uri;
+    int _statusCode;
 
 public:
     inline int getStatusCode() const {
-        return m_statusCode;
+        return _statusCode;
     }
 
     inline void setStatusCode(int statusCode) {
-        m_statusCode = statusCode;
+        _statusCode = statusCode;
     }
 
     inline std::string getUri() const {
-        return m_uri;
+        return _uri;
     }
 
     inline void setUri(std::string uri) {
-        m_uri = uri;
+        _uri = uri;
     }
 
     inline std::unordered_map<std::string, std::string> getResponseHeader() const {
-        return m_responseHeader;
+        return _responseHeader;
     }
 
     inline void setResponseHeader(std::unordered_map<std::string, std::string> &responseHeader) {
-        m_responseHeader = responseHeader;
+        _responseHeader = responseHeader;
     }
 };
 

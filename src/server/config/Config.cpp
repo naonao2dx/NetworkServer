@@ -15,9 +15,9 @@ Config::Config() {
     std::unordered_map<std::string, std::string> configMap;
 
 
-    std::ifstream ifs(m_configFilePath);
+    std::ifstream ifs(_configFilePath);
     if (!ifs) {
-        std::cerr << "Could not open the file: " << m_configFilePath << std::endl;
+        std::cerr << "Could not open the file: " << _configFilePath << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
@@ -31,9 +31,9 @@ Config::Config() {
         value = StrUtil::trim(configRow[1]);
         configMap.emplace(key, StrUtil::trim(value, "\""));
     }
-    m_configMap = configMap;
+    _configMap = configMap;
 }
 
 std::string Config::getConfigValue(std::string strExec, std::string key) {
-    return m_configMap.at(strExec + "." + key);
+    return _configMap.at(strExec + "." + key);
 }

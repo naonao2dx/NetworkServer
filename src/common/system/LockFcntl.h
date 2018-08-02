@@ -15,7 +15,7 @@ private:
     friend class Singleton<LockFcntl>;
 
 private:
-    std::string m_strExec;
+    std::string _strExec;
 
 public:
     struct flock lockIt, unlockIt;

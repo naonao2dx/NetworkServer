@@ -8,9 +8,9 @@
 
 class AbstractServer {
 public:
-    AbstractServer() = default;
-    AbstractServer(const AbstractServer &rhs) = default;
-    virtual ~AbstractServer() = default;
+    AbstractServer(){};
+    AbstractServer(const AbstractServer &rhs){};
+    virtual ~AbstractServer(){};
 
     virtual void start() = 0;
     virtual void killChild() = 0;

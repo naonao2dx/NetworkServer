@@ -14,33 +14,33 @@
 
 
 WebServer::WebServer(std::string strExec)
-: m_strExec(strExec)
+: _strExec(strExec)
 {
 #ifdef __APPLE__
     // Can't use mutex lock over multi process at MacOS (PTHREAD_PROCESS_SHARED)
-    m_pLock = LockFcntl::getInstance();
+    _pLock = LockFcntl::getInstance();
 #else
-    //m_pLock = LockPthread::getInstance();
-    m_pLock = LockFcntl::getInstance();
+    //_pLock = LockPthread::getInstance();
+    _pLock = LockFcntl::getInstance();
 #endif
     auto config = Config::getInstance();
-    std::string listeningPort = config->getConfigValue(m_strExec, "ListenPort");
-    std::string startServer = config->getConfigValue(m_strExec, "StartServer");
-    m_listenPort = std::stoi(listeningPort);
-    m_startServer = std::stoi(startServer);
+    std::string listeningPort = config->getConfigValue(_strExec, "ListenPort");
+    std::string startServer = config->getConfigValue(_strExec, "StartServer");
+    _listenPort = std::stoi(listeningPort);
+    _startServer = std::stoi(startServer);
 }
 
 void WebServer::start() {
     int listenfd;
     socklen_t addrlen;
-    std::string strListenPort = std::to_string(m_listenPort);
+    std::string strListenPort = std::to_string(_listenPort);
 
     listenfd = TCP::Listen(nullptr, strListenPort.c_str(), &addrlen);
 
-    m_pLock->init();
+    _pLock->init();
 
-    for (auto i = 0; i < m_startServer; i++)
-        m_pids.push_back(makeChild(i, listenfd, addrlen));
+    for (auto i = 0; i < _startServer; i++)
+        _pids.push_back(makeChild(i, listenfd, addrlen));
 
     // Register SIGINT and SIGTERM function to kill all child process when receive signals
     Signal::Handle(SIGTERM, ServerManager::sigInt);
@@ -69,7 +69,7 @@ void WebServer::process(int i, int listenfd, int addrlen) {
     cliaddr = new struct sockaddr;
 
     auto config = Config::getInstance();
-    std::string accesslogFilePath = config->getConfigValue(m_strExec, "AccessLogFilePath");
+    std::string accesslogFilePath = config->getConfigValue(_strExec, "AccessLogFilePath");
     std::ofstream accesslog(accesslogFilePath, std::ios::out | std::ios::app);
     if (!accesslog) {
         std::cerr << "Could not file open: " << accesslogFilePath << std::endl;
@@ -80,13 +80,13 @@ void WebServer::process(int i, int listenfd, int addrlen) {
         std::unique_ptr<HttpController> httpController;
 
         clilen = addrlen;
-        m_pLock->wait();
+        _pLock->wait();
         connfd = accept(listenfd, cliaddr, &clilen);
-        m_pLock->release();
+        _pLock->release();
 
-        if ("Web" == m_strExec) {
+        if ("Web" == _strExec) {
             httpController.reset(new HttpController(connfd, cliaddr));
-        } else if ("API" == m_strExec) {
+        } else if ("API" == _strExec) {
             httpController.reset(new APIController(connfd, cliaddr));
         }
         httpController->process();
@@ -98,9 +98,9 @@ void WebServer::process(int i, int listenfd, int addrlen) {
 }
 
 void WebServer::killChild() {
-    for (auto i = 0; i < m_startServer; i++) {
-        kill(m_pids.at(i), SIGTERM);
-        std::cout << "kill process: " << m_pids.at(i) << std::endl;
+    for (auto i = 0; i < _startServer; i++) {
+        kill(_pids.at(i), SIGTERM);
+        std::cout << "kill process: " << _pids.at(i) << std::endl;
     }
 
     while (wait(nullptr) > 0)
